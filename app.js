@@ -5,6 +5,7 @@ const helmet = require('helmet')
 const compression = require('compression')
 const url = require('url')
 const fs = require('fs')
+require(__dirname  + '/lib/helper.js')
 
 app.use(helmet())
 app.use(compression())
