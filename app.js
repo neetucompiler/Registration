@@ -5,7 +5,7 @@ const helmet = require('helmet')
 const compression = require('compression')
 const url = require('url')
 const fs = require('fs')
-require(__dirname  + '/lib/helper.js')
+const mimeHelper = require(path.join(__dirname, 'lib/helper.js'))
 
 app.use(helmet())
 app.use(compression())
@@ -16,20 +16,20 @@ app.get('/', (req, res) => {
 })
 
 app.get('/*.*', (req, res) => {
-  var options = url.parse(req.url, true)
-  var mime = Helper.getMime(options)
+  let options = url.parse(req.url, true)
+  let mime = mimeHelper.getMime(options)
   serveFile(res, options.pathname, mime)
 })
 
-function serveFile(res, pathName, mime) {
+function serveFile (res, pathName, mime) {
   mime = mime || 'text/html'
 
-  fs.readFile(__dirname + '/' + pathName, (err, data) => {
+  fs.readFile(path.join(__dirname, pathName), (err, data) => {
     if (err) {
-      res.writeHead(500, { "Content-Type": "text/plain" })
-      return res.end('Error loading ' + pathName + " with Error: " + err)
+      res.writeHead(500, { 'Content-Type': 'text/plain' })
+      return res.end('Error loading ' + pathName + ' with Error: ' + err)
     }
-    res.writeHead(200, { "Content-Type": mime })
+    res.writeHead(200, { 'Content-Type': mime })
     res.end(data)
   })
 }
