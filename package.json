@@ -1,0 +1,24 @@
+{
+  "name": "guided-chatbot",
+  "version": "1.0.0",
+  "description": "A simple guided chatbot for insurance use case",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://tcsatu@guided-chatbot.scm.azurewebsites.net:443/guided-chatbot.git"
+  },
+  "keywords": [
+    "guided",
+    "chatbot"
+  ],
+  "author": "Vignesh.S",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.1",
+    "helmet": "^3.8.2"
+  }
+}

@@ -2,7 +2,7 @@ var msgsContainer = jQ('.messages-content')
 var index = 0
 var userInputField, car_make, car_model
 
-function get_browser () {
+function get_browser() {
   var ua = navigator.userAgent
   var tem
   var M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []
@@ -32,11 +32,11 @@ function get_browser () {
   }
 }
 
-function playSound (filename) {
-  jQ('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>').appendTo(jQ('#sound'))
+function playSound(filename) {
+  jQ('<audio autoplay="autoplay"><source src="../assets/' + filename + '.mp3" type="audio/mpeg" /><source src="../assets/' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="../assets/' + filename + '.mp3" /></audio>').appendTo(jQ('#sound'))
 }
 
-function setTimeStamp (customTimeStamp) {
+function setTimeStamp(customTimeStamp) {
   if (jQ.trim(customTimeStamp) === '') {
     jQ('<div class="timestamp">' + formatAMPM(new Date()) + '</div>').appendTo(jQ('.message:last'))
     return false
@@ -44,18 +44,18 @@ function setTimeStamp (customTimeStamp) {
   jQ('<div class="timestamp">' + customTimeStamp + '</div>').appendTo(jQ('.message:last'))
 }
 
-function setTyping () {
+function setTyping() {
   var correctElement = msgsContainer.find('.mCSB_container')
   if (!correctElement.length) {
     console.log('No element found with .mCSB_container')
     return false
   }
-  jQ('<div class="message loading new"><figure class="avatar"><img src="icon.png" /></figure><span></span></div>').appendTo(correctElement)
+  jQ('<div class="message loading new"><figure class="avatar"><img src="../assets/icon.png" /></figure><span></span></div>').appendTo(correctElement)
   jQ('<div class="timestamp">Typing...</div>').appendTo(jQ('.message:last'))
   updateScrollbar()
 }
 
-function disableUserInput (placeholderText) {
+function disableUserInput(placeholderText) {
   placeholderText = placeholderText || 'Please Wait...' // Default text
   userInputField.blur() // Remove the focus from the user input field
   userInputField.val('') // Remove the text from the user input field
@@ -63,20 +63,18 @@ function disableUserInput (placeholderText) {
   userInputField.attr('placeholder', placeholderText) // Change the placeholder to ask the user to wait
   jQ('.message-box').addClass('disabledCursor')
   jQ('.message-submit').attr('disabled', 'true')
-  // console.log("disabled user input");
 }
 
-function enableUserInput (placeholderText) {
+function enableUserInput(placeholderText) {
   placeholderText = placeholderText || 'Please Type!' // Default text
   userInputField.focus() // Remove the focus from the user input field
   userInputField.removeAttr('disabled') // Enable the user input field
   userInputField.attr('placeholder', placeholderText) // Change the placeholder to prompt input from the user
   jQ('.message-box').removeClass('disabledCursor')
   jQ('.message-submit').removeAttr('disabled')
-  // console.log("enabled user input");
 }
 
-function insertUserMessage (msg) {
+function insertUserMessage(msg) {
   if (jQ.trim(msg) === '') {
     console.log('The msg parameter was empty or null')
     return false
@@ -94,7 +92,7 @@ function insertUserMessage (msg) {
   updateScrollbar()
 }
 
-function displayBotMessage (botMessage, timeout, choices) {
+function displayBotMessage(botMessage, timeout, choices) {
   if (jQ.trim(botMessage) === '') {
     return false
   }
@@ -103,11 +101,11 @@ function displayBotMessage (botMessage, timeout, choices) {
     return false
   }
   if (timeout) {
-    setTimeout(function () {
+    setTimeout(function() {
       setTyping()
     }, timeout / 2)
-    setTimeout(function () {
-      jQ('<div class="message new"><figure class="avatar"><img src="icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+    setTimeout(function() {
+      jQ('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
       setTimeStamp()
       jQ('.message.loading').remove()
       jQ('.message.timestamp').remove()
@@ -115,7 +113,7 @@ function displayBotMessage (botMessage, timeout, choices) {
       playSound('bing')
     }, timeout)
   } else {
-    jQ('<div class="message new"><figure class="avatar"><img src="icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+    jQ('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
     setTimeStamp()
     playSound('bing')
   }
@@ -129,7 +127,7 @@ function displayBotMessage (botMessage, timeout, choices) {
     }
     choicesBotMessage += '</div>'
     if (timeout) {
-      setTimeout(function () {
+      setTimeout(function() {
         jQ(choicesBotMessage).appendTo(correctElement)
         playSound('bing')
         jQ('.message.loading').remove()
@@ -149,14 +147,14 @@ function displayBotMessage (botMessage, timeout, choices) {
   updateScrollbar()
 }
 
-function updateScrollbar () {
+function updateScrollbar() {
   msgsContainer.mCustomScrollbar('update').mCustomScrollbar('scrollTo', 'bottom', {
     scrollInertia: 10,
     timeout: 0
   })
 }
 
-function formatAMPM (date) {
+function formatAMPM(date) {
   var hours = date.getHours()
   var minutes = date.getMinutes()
   var ampm = hours >= 12 ? 'pm' : 'am'
@@ -168,17 +166,17 @@ function formatAMPM (date) {
 }
 
 var setTimeoutID
-jQ('#minim-chat').click(function () {
+jQ('#minim-chat').click(function() {
   jQ('#minim-chat').css('display', 'none')
   jQ('#maxi-chat').css('display', 'block')
   // var height = (j(".chat").outerHeight(true) - 46) * -1;
   // j(".chat").css("margin", "0 0 " + height + "px 0");
   jQ('.chat').css('margin', '0 0 -354px 0')
-  setTimeoutID = setTimeout(function () {
+  setTimeoutID = setTimeout(function() {
     jQ('#animHelpText').css('display', 'block')
   }, 1500)
 })
-jQ('#maxi-chat').click(function () {
+jQ('#maxi-chat').click(function() {
   jQ('#minim-chat').css('display', 'block')
   jQ('#maxi-chat').css('display', 'none')
   jQ('.chat').css('margin', '0')
@@ -189,19 +187,19 @@ jQ('#maxi-chat').click(function () {
 var botDialogs = {},
   botDialogsLength
 
-var getJson = jQ.getJSON('data_back.json', function (data) {
-  jQ(data).each(function (index, val) {
+var getJson = jQ.getJSON('../assets/data_back.json', function(data) {
+  jQ(data).each(function(index, val) {
     botDialogs[val['id']] = val
   })
   botDialogsLength = data.length
 })
 
-getJson.error(function (jqxhr, textStatus, error) {
+getJson.error(function(jqxhr, textStatus, error) {
   var err = textStatus + ', ' + error
   console.log('Request Failed: ' + err)
 })
 
-getJson.success(function () {
+getJson.success(function() {
   userInputField = jQ('#userInputText')
   msgsContainer.mCustomScrollbar()
 
@@ -220,7 +218,7 @@ var nextResponses = [],
   retryPrompt
 
 // recurring function
-function insertBotMessage (id) {
+function insertBotMessage(id) {
   if (id > 0 && id <= botDialogsLength) { // check if the id is valid
     botMsgType = botDialogs[id].botMessageType // determine the botMsgType
     userMsgType = getUserMessageType(botDialogs[id]) // determine the userMsgType
@@ -275,7 +273,7 @@ function insertBotMessage (id) {
   } else {}
 }
 
-function getRandom (arrayResp) {
+function getRandom(arrayResp) {
   var retResponse
   if (jQ.isArray(arrayResp)) { // its an array
     retResponse = arrayResp[Math.floor((Math.random() * arrayResp.length))]
@@ -285,7 +283,7 @@ function getRandom (arrayResp) {
   return retResponse
 }
 
-function getUserMessageType (botDialog) {
+function getUserMessageType(botDialog) {
   var retUserMsgType
   if (botDialog.userMessageType && botMsgType !== 'dialog') {
     retUserMsgType = botDialog.userMessageType // determine the userMsgType
@@ -301,14 +299,14 @@ function getUserMessageType (botDialog) {
   return retUserMsgType
 }
 
-function returnChoices (choicesArray) {
+function returnChoices(choicesArray) {
   choices = []
   for (var i = 0; i < choicesArray.length; i++) {
     choices.push(getRandom(choicesArray[i].option))
   }
 }
 
-function determineNextResponses (botMessage) {
+function determineNextResponses(botMessage) {
   nextResponses = []
   switch (botMsgType) {
     case 'text':
@@ -336,7 +334,7 @@ function determineNextResponses (botMessage) {
 
       if (message_content.match(/car do you drive/g)) {
         jQ('#userInputText').autocomplete({
-          source: function (request, response) {
+          source: function(request, response) {
             var results = jQ.ui.autocomplete.filter(Object.keys(Cars), request.term)
             response(results.slice(0, 10))
           },
@@ -351,12 +349,12 @@ function determineNextResponses (botMessage) {
           },
           messages: {
             noResults: '',
-            results: function () {}
+            results: function() {}
           }
         })
       } else if (message_content.match(/model/g)) {
         jQ('#userInputText').autocomplete({
-          source: function (request, response) {
+          source: function(request, response) {
             var results = jQ.ui.autocomplete.filter(Cars[car_make], request.term)
             response(results.slice(0, 10))
           },
@@ -371,12 +369,12 @@ function determineNextResponses (botMessage) {
           },
           messages: {
             noResults: '',
-            results: function () {}
+            results: function() {}
           }
         })
       } else if (message_content.match(/question/g)) {
         jQ('#userInputText').autocomplete({
-          source: function (request, response) {
+          source: function(request, response) {
             var results = jQ.ui.autocomplete.filter(Object.keys(faq), request.term)
             response(results.slice(0, 10))
           },
@@ -389,14 +387,14 @@ function determineNextResponses (botMessage) {
             of: '#userInputText',
             collision: 'flip'
           },
-          select: function (event, ui) {
+          select: function(event, ui) {
             if (ui.item.value in faq) {
               correct_answer = faq[ui.item.value]
             }
           },
           messages: {
             noResults: '',
-            results: function () {}
+            results: function() {}
           }
         })
       }
@@ -420,18 +418,18 @@ function determineNextResponses (botMessage) {
   }
 }
 
-function choiceClick (selectedChoice) {
+function choiceClick(selectedChoice) {
   msgsContainer.find('.chatBtn').attr('disabled', true) // disable all the buttons in the messages window
   insertUserMessage(choices[selectedChoice])
   insertBotMessage(nextResponses[selectedChoice])
 }
 
-function isValidEmail (email) {
+function isValidEmail(email) {
   var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/
   return re.test(email)
 }
 
-function isValidString (str) {
+function isValidString(str) {
   if (str !== undefined && str !== null && str !== '' && jQ.trim(str) !== '') {
     return !/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(str)
   } else {
@@ -439,16 +437,16 @@ function isValidString (str) {
   }
 }
 
-function isValidNumber (str) {
+function isValidNumber(str) {
   return !isNaN(str)
 }
 
-function isValidDate (str) {
+function isValidDate(str) {
   jQ('#userInputText').datepicker('destroy')
   return true
 }
 
-function isValidCarRegNo (carRegNo) {
+function isValidCarRegNo(carRegNo) {
   if (carRegNo !== undefined && carRegNo !== null && carRegNo !== '' && jQ.trim(carRegNo) !== '') {
     var vehicleNo = carRegNo.split('-')
     if (vehicleNo.length == 4) {
@@ -466,8 +464,7 @@ function isValidCarRegNo (carRegNo) {
   }
 }
 
-function isValidCar (car) {
-  console.log('inside isValidCar')
+function isValidCar(car) {
   if (car !== undefined && car !== null && car !== '' && jQ.trim(car) !== '') {
     if (Cars.hasOwnProperty(car)) {
       car_make = car
@@ -481,7 +478,7 @@ function isValidCar (car) {
   }
 }
 
-function isValidCarModel (model) {
+function isValidCarModel(model) {
   if (model !== undefined && model !== null && model !== '' && jQ.trim(model) !== '' && car_make !== undefined && car_make !== null) {
     if (Cars[car_make].indexOf(model) >= 0) {
       jQ('#userInputText').autocomplete('destroy')
@@ -494,7 +491,7 @@ function isValidCarModel (model) {
   }
 }
 
-function generateRandomName () {
+function generateRandomName() {
   var randomGender = Math.floor(Math.random() * 2)
   var males = ['Sathish', 'Robert', 'Dhanish', 'Parker', 'Zeeshan', 'Vinay', 'Rathod', 'Vijayan', 'Aashish', 'Bharath', 'Ajith', 'Nithin', 'Ramesh']
   var females = ['Aarthi', 'Aswathy', 'Swathy', 'Trisha', 'Gayathri', 'Nivethitha', 'Shruthi', 'Yamini', 'Preethi', 'Dharini', 'Sindhuja']
@@ -507,15 +504,13 @@ function generateRandomName () {
   return randomName
 }
 
-function validate () {
+function validate() {
   var userInputText = userInputField.val()
   switch (userMsgType) {
 
     case 'text':
       if (isValidString(userInputText)) {
-        console.log('valid text')
         assignCarVariable(userIptVar, userInputText)
-
         insertUserMessage(userInputText)
         insertBotMessage(nextResponses[0])
         retryPrompt = ''
@@ -526,9 +521,7 @@ function validate () {
 
     case 'number':
       if (isValidNumber(userInputText)) {
-        console.log('valid number')
         assignCarVariable(userIptVar, userInputText)
-
         insertUserMessage(userInputText)
         insertBotMessage(nextResponses[0])
 
@@ -541,7 +534,6 @@ function validate () {
     case 'function':
       if (typeof window[fnName] === 'function') {
         if (window[fnName](userInputText)) { // Test if the user defined function validates true for the userInput given.
-          console.log('The function "' + fnName + '" returned true.')
           assignCarVariable(userIptVar, userInputText)
           insertUserMessage(userInputText)
           insertBotMessage(nextResponses[0])
@@ -570,7 +562,7 @@ function validate () {
 
     case 'autocomplete':
       insertUserMessage(userInputText)
-      setTimeout(function () {
+      setTimeout(function() {
         displayBotMessage(correct_answer)
         correct_answer = 'Please select your question from the given list.'
       }, 500)
@@ -585,22 +577,22 @@ function validate () {
 
 cars = {}
 // store user input in a varible to display
-function assignCarVariable (uInputVar, uInputText) {
+function assignCarVariable(uInputVar, uInputText) {
   cars[uInputVar] = uInputText
   console.log(cars)
 }
 
 jQ('#generalForm').bind('submit', validate)
 
-jQ(document).ready(function () {
+jQ(document).ready(function() {
   var clickDisabled = false
-  jQ('.buy-insurance-btn').click(function () {
+  jQ('.buy-insurance-btn').click(function() {
     if (clickDisabled) {
       return
     }
     insertBotMessage(4)
     clickDisabled = true
-    setTimeout(function () {
+    setTimeout(function() {
       clickDisabled = false
     }, 10000)
   })

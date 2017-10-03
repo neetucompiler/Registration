@@ -1,0 +1,123 @@
+[{
+	"id": 1,
+	"botMessage": "Hi.. Welcome to Auto Insurance",
+	"botMessageType": "dialog",
+	"nextResponse": 2,
+	"retryPrompt" : "Please select correct option"
+},{
+	"id": 2,
+	"botMessage": ["Please let me know what I may help you with, today?", "Can you tell me what help do you need today?"],
+	"botMessageType": "choice",
+	"choice": [{
+		"option": ["Do you have question?"],
+		"nextResponse": 3
+	}, {
+		"option": "Do you want to buy an insurance",
+		"nextResponse": 4
+	}],
+	"userMessageType": "number",
+	"retryPrompt" : "Please select correct option"
+},{
+	"id": 3,
+	"botMessage": "Please select your question",
+	"botMessageType": "autocomplete",
+	"userMessageType": "autocomplete",
+	"nextResponse": 4,
+	"retryPrompt" : "Please select correct option"
+},{
+	"id": 4,
+	"botMessage": "We are glad to help you get a Car Insurance. Please hold on while we connect you to our Insurance Expert. Please answer following few questions, so we can quickly get a quote that suits you!",
+	"botMessageType": "dialog",
+	"nextResponse": 5,
+	"retryPrompt" : "Please select correct option"
+},{
+	"id": 5,
+	"botMessage": "Do you remember your Car registration number?",
+	"botMessageType": "confirm",
+	"userMessageType": ["number", "text"],
+	"nextResponse": [6,7],
+	"retryPrompt" : "Please select correct option"
+},{
+	"id": 6,
+	"botMessage": "Please enter your vehicle registration number? (eg: TN-05-AB-1234)",
+	"botMessageType": "text",
+	"userMessageType": "<fn>isValidCarRegNo",
+	"nextResponse": 7,
+	"userInputVar": "carRegNo",
+	"retryPrompt": "Please enter the valid Registration Number found in your car number plate"
+},{
+	"id": 7,
+	"botMessage": "Which car do you drive?",
+	"botMessageType": "autocomplete",
+	"userMessageType": "<fn>isValidCar",
+	"nextResponse": 8,
+	"userInputVar": "carMake",
+	"retryPrompt": "Select the car make"
+}, 
+{
+	"id": 8,
+	"botMessage": "What is the model of your car?",
+	"botMessageType": "autocomplete",
+	"userMessageType": "<fn>isValidCarModel",
+	"nextResponse": 9,
+	"userInputVar": "carModel",
+	"retryPrompt": "Select your car model"
+}, 
+{
+	"id": 9,
+	"botMessage": "Your car is registered from which city?",
+	"botMessageType": "text",
+	"userMessageType": "text",
+	"nextResponse": 10,
+	"userInputVar": "carCity",
+	"retryPrompt": "Please provide correct city"
+},
+{
+	"id": 10,
+	"botMessage": "Your car is registered in which year?",
+	"botMessageType": "year",
+	"userMessageType": "year",
+	"nextResponse": 11,
+	"userInputVar": "carPurchaseYear",
+	"retryPrompt": ""
+},
+{
+	"id": 11,
+	"botMessage": "How much did you spend on your car?",
+	"botMessageType": "text",
+	"userMessageType": "number",
+	"nextResponse": 12,
+	"userInputVar": "carCost",
+	"retryPrompt": ""
+},
+{
+	"id": 12,
+	"botMessage": "Please select the correct year you made your last claim from the options given below.",
+	"botMessageType": "choice",
+	"choice": [{
+		"option": "Never",
+		"nextResponse": 13
+	}, {
+		"option": "Less than 1 year ago",
+		"nextResponse": 13
+	}, {
+		"option": "October 2014 to September 2015",
+		"nextResponse": 13
+	}, {
+		"option": "October 2013 to September 2014",
+		"nextResponse": 13
+	}, {
+		"option": "October 2012 to September 2013",
+		"nextResponse": 13
+	}, {
+		"option": "October 2011 to September 2012",
+		"nextResponse": 13
+	}],
+	"userMessageType": "number",
+	"nextResponse": 12,
+	"retryPrompt": ""	
+},{
+	"id": 13,
+	"botMessage": "Please wait as we are redirecting to the Third Party",
+	"botMessageType": "dialog"
+}]
