@@ -198,6 +198,26 @@ Chat Title
 }
 
 
+.chat-title .pollySpeaker {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+	right: 50px;
+	width: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: 0px;
+  border-radius: 5px;
+  padding: 5px 7px;
+}
+
+.chat-title .pollySpeaker:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-title .pollySpeaker:active {
+  background-color: rgba(255, 255, 255, 0.5);
+} 
 /*--------------------
 Messages
 --------------------*/

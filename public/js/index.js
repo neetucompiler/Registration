@@ -2,7 +2,54 @@ var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
 var carMake
 
-function getBrowser () {
+
+AWS.config.region = 'eu-west-1'
+AWS.config.accessKeyId = 'AKIAIWKA4ANUCART52HQ'
+AWS.config.secretAccessKey = '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'
+
+function pollySpeak(params) {
+  if (!params['Text']) {
+    console.log('Please provide \'Text\' to make polly speak')
+    return
+  }
+  params = {
+    OutputFormat: params['OutputFormat'] || 'mp3',
+    Text: params['Text'],
+    VoiceId: params['VoiceId'] || 'Joanna',
+    SampleRate: params['SampleRate'] || '22050',
+    TextType: params['TextType'] || 'text'
+  }
+
+  var polly = new AWS.Polly({
+    apiVersion: '2016-06-10'
+  })
+
+  polly.synthesizeSpeech(params, function (err, data) {
+    if (err) console.log(err, err.stack) // an error occurred
+    var uInt8Array = new Uint8Array(data.AudioStream)
+    var arrayBuffer = uInt8Array.buffer
+    var blob = new Blob([arrayBuffer])
+    var url = URL.createObjectURL(blob)
+
+    $('#pollyAudio > source').attr('src', url)
+    $('#pollyAudio')[0].load()
+    $('#pollyAudio')[0].play()
+  })
+}
+
+var mute = false
+$('#pollyMute').click(function () {
+  $('#pollyMute').css('display', 'none')
+  $('#pollySpeak').css('display', 'block')
+  mute = false
+})
+$('#pollySpeak').click(function () {
+  $('#pollySpeak').css('display', 'none')
+  $('#pollyMute').css('display', 'block')
+  mute = true
+})
+
+function getBrowser() {
   var ua = navigator.userAgent
   var tem
   var M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []
@@ -32,11 +79,11 @@ function getBrowser () {
   }
 }
 
-function playSound (filename) {
+function playSound(filename) {
   $('<audio autoplay="autoplay"><source src="../assets/' + filename + '.mp3" type="audio/mpeg" /><source src="../assets/' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="../assets/' + filename + '.mp3" /></audio>').appendTo($('#sound'))
 }
 
-function setTimeStamp (customTimeStamp) {
+function setTimeStamp(customTimeStamp) {
   if ($.trim(customTimeStamp) === '') {
     $('<div class="timestamp">' + formatAMPM(new Date()) + '</div>').appendTo($('.message:last'))
     return false
@@ -44,7 +91,7 @@ function setTimeStamp (customTimeStamp) {
   $('<div class="timestamp">' + customTimeStamp + '</div>').appendTo($('.message:last'))
 }
 
-function setTyping () {
+function setTyping() {
   var correctElement = msgsContainer.find('.mCSB_container')
   if (!correctElement.length) {
     console.log('No element found with .mCSB_container')
@@ -55,7 +102,7 @@ function setTyping () {
   updateScrollbar()
 }
 
-function disableUserInput (placeholderText) {
+function disableUserInput(placeholderText) {
   placeholderText = placeholderText || 'Please Wait...' // Default text
   userInputField.blur() // Remove the focus from the user input field
   userInputField.val('') // Remove the text from the user input field
@@ -65,7 +112,7 @@ function disableUserInput (placeholderText) {
   $('.message-submit').attr('disabled', 'true')
 }
 
-function enableUserInput (placeholderText) {
+function enableUserInput(placeholderText) {
   placeholderText = placeholderText || 'Please Type!' // Default text
   userInputField.focus() // Remove the focus from the user input field
   userInputField.val('') // Remove the text from the user input field
@@ -75,7 +122,7 @@ function enableUserInput (placeholderText) {
   $('.message-submit').removeAttr('disabled')
 }
 
-function insertUserMessage (msg) {
+function insertUserMessage(msg) {
   if ($.trim(msg) === '') {
     console.log('The msg parameter was empty or null')
     return false
@@ -93,7 +140,7 @@ function insertUserMessage (msg) {
   updateScrollbar()
 }
 
-function displayBotMessage (botMessage, timeout, choices) {
+function displayBotMessage(botMessage, timeout, choices) {
   if ($.trim(botMessage) === '') {
     return false
   }
@@ -112,9 +159,19 @@ function displayBotMessage (botMessage, timeout, choices) {
       $('.message.timestamp').remove()
       updateScrollbar()
       playSound('bing')
+      if (!mute) {
+        pollySpeak({
+          Text: botMessage
+        })
+      }
     }, timeout)
   } else {
     $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+    if (!mute) {
+      pollySpeak({
+        Text: botMessage
+      })
+    }
     setTimeStamp()
     playSound('bing')
   }
@@ -148,14 +205,14 @@ function displayBotMessage (botMessage, timeout, choices) {
   updateScrollbar()
 }
 
-function updateScrollbar () {
+function updateScrollbar() {
   msgsContainer.mCustomScrollbar('update').mCustomScrollbar('scrollTo', 'bottom', {
     scrollInertia: 10,
     timeout: 0
   })
 }
 
-function formatAMPM (date) {
+function formatAMPM(date) {
   var hours = date.getHours()
   var minutes = date.getMinutes()
   var ampm = hours >= 12 ? 'pm' : 'am'
@@ -219,7 +276,7 @@ var fnName, correctAnswer
 var retryPrompt
 
 // recurring function
-function insertBotMessage (id) {
+function insertBotMessage(id) {
   if (id > 0 && id <= botDialogsLength) { // check if the id is valid
     botMsgType = botDialogs[id].botMessageType // determine the botMsgType
     userMsgType = getUserMessageType(botDialogs[id]) // determine the userMsgType
@@ -273,7 +330,7 @@ function insertBotMessage (id) {
   } else {}
 }
 
-function getRandom (arrayResp) {
+function getRandom(arrayResp) {
   var retResponse
   if ($.isArray(arrayResp)) { // its an array
     retResponse = arrayResp[Math.floor((Math.random() * arrayResp.length))]
@@ -283,7 +340,7 @@ function getRandom (arrayResp) {
   return retResponse
 }
 
-function getUserMessageType (botDialog) {
+function getUserMessageType(botDialog) {
   var retUserMsgType
   if (botDialog.userMessageType && botMsgType !== 'dialog') {
     retUserMsgType = botDialog.userMessageType // determine the userMsgType
@@ -299,14 +356,14 @@ function getUserMessageType (botDialog) {
   return retUserMsgType
 }
 
-function returnChoices (choicesArray) {
+function returnChoices(choicesArray) {
   choices = []
   for (var i = 0; i < choicesArray.length; i++) {
     choices.push(getRandom(choicesArray[i].option))
   }
 }
 
-function determineNextResponses (botMessage) {
+function determineNextResponses(botMessage) {
   nextResponses = []
   switch (botMsgType) {
     case 'text':
@@ -418,18 +475,18 @@ function determineNextResponses (botMessage) {
   }
 }
 
-function choiceClick (selectedChoice) {
+function choiceClick(selectedChoice) {
   msgsContainer.find('.chatBtn').attr('disabled', true) // disable all the buttons in the messages window
   insertUserMessage(choices[selectedChoice])
   insertBotMessage(nextResponses[selectedChoice])
 }
 
-function isValidEmail (email) {
+function isValidEmail(email) {
   var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/
   return re.test(email)
 }
 
-function isValidString (str) {
+function isValidString(str) {
   if (str !== undefined && str !== null && str !== '' && $.trim(str) !== '') {
     return !/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(str)
   } else {
@@ -437,16 +494,16 @@ function isValidString (str) {
   }
 }
 
-function isValidNumber (str) {
+function isValidNumber(str) {
   return !isNaN(str)
 }
 
-function isValidDate (str) {
+function isValidDate(str) {
   $('#userInputText').datepicker('destroy')
   return true
 }
 
-function isValidCarRegNo (carRegNo) {
+function isValidCarRegNo(carRegNo) {
   if (carRegNo !== undefined && carRegNo !== null && carRegNo !== '' && $.trim(carRegNo) !== '') {
     var vehicleNo = carRegNo.split('-')
     if (vehicleNo.length === 4) {
@@ -464,7 +521,7 @@ function isValidCarRegNo (carRegNo) {
   }
 }
 
-function isValidCar (car) {
+function isValidCar(car) {
   if (car !== undefined && car !== null && car !== '' && $.trim(car) !== '') {
     if (Cars.hasOwnProperty(car)) {
       carMake = car
@@ -478,7 +535,7 @@ function isValidCar (car) {
   }
 }
 
-function isValidCarModel (model) {
+function isValidCarModel(model) {
   if (model !== undefined && model !== null && model !== '' && $.trim(model) !== '' && carMake !== undefined && carMake !== null) {
     if (Cars[carMake].indexOf(model) >= 0) {
       $('#userInputText').autocomplete('destroy')
@@ -491,7 +548,7 @@ function isValidCarModel (model) {
   }
 }
 
-function generateRandomName () {
+function generateRandomName() {
   var randomGender = Math.floor(Math.random() * 2)
   var males = ['Sathish', 'Robert', 'Dhanish', 'Parker', 'Zeeshan', 'Vinay', 'Rathod', 'Vijayan', 'Aashish', 'Bharath', 'Ajith', 'Nithin', 'Ramesh']
   var females = ['Aarthi', 'Aswathy', 'Swathy', 'Trisha', 'Gayathri', 'Nivethitha', 'Shruthi', 'Yamini', 'Preethi', 'Dharini', 'Sindhuja']
@@ -504,7 +561,7 @@ function generateRandomName () {
   return randomName
 }
 
-function validate () {
+function validate() {
   var userInputText = userInputField.val()
   switch (userMsgType) {
     case 'text':
@@ -574,7 +631,7 @@ function validate () {
 
 var logger = {}
 // store user data in a varible to display
-function userDataLogger (inputKey, inputValue) {
+function userDataLogger(inputKey, inputValue) {
   logger[inputKey] = inputValue
   console.log(logger)
 }

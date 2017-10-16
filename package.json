@@ -15,7 +15,7 @@
     "guided",
     "chatbot"
   ],
-  "author": "Vignesh.S",
+  "author": "ATU",
   "license": "MIT",
   "dependencies": {
     "compression": "^1.7.1",
