@@ -15,7 +15,7 @@ function pollySpeak(params) {
   params = {
     OutputFormat: params['OutputFormat'] || 'mp3',
     Text: params['Text'],
-    VoiceId: params['VoiceId'] || 'Joanna',
+    VoiceId: params['VoiceId'] || 'Geraint',
     SampleRate: params['SampleRate'] || '22050',
     TextType: params['TextType'] || 'text'
   }
@@ -159,21 +159,21 @@ function displayBotMessage(botMessage, timeout, choices) {
       $('.message.timestamp').remove()
       updateScrollbar()
       playSound('bing')
-      if (!mute) {
-        pollySpeak({
-          Text: botMessage
-        })
-      }
+      // if (!mute) {
+      //   pollySpeak({
+      //     Text: botMessage
+      //   })
+      // }
     }, timeout)
   } else {
     $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+    setTimeStamp()
+    playSound('bing')
     if (!mute) {
       pollySpeak({
         Text: botMessage
       })
     }
-    setTimeStamp()
-    playSound('bing')
   }
 
   // if the choices exists and has atleast 2 choices
