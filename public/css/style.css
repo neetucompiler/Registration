@@ -218,6 +218,13 @@ Chat Title
 .chat-title .pollySpeaker:active {
   background-color: rgba(255, 255, 255, 0.5);
 } 
+
+span#userInputVoice {
+  top: 7px;
+  right: 63px;
+  position: absolute
+}
+
 /*--------------------
 Messages
 --------------------*/

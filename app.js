@@ -12,8 +12,7 @@ app.use(compression())
 app.use(express.static(path.join(__dirname, './public')))
 
 app.get('/', (req, res) => {
-  res.render ('index',{ region: "eu-west-1", accessKeyId: "AKIAIWKA4ANUCART52HQ", secretAccessKey: "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" })
-  // res.sendFile(path.join(__dirname, './public/index.html'))
+  res.sendFile(path.join(__dirname, './public/index.html'))
 })
 
 app.get('/*.*', (req, res) => {

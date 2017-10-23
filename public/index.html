@@ -49,6 +49,14 @@
         <form id="generalForm" class="message-box">
           <div id="sound"></div>
           <input id="userInputText" type="text" class="message-input">
+          <span id="userInputVoice">
+					<button type="button" id="enabledVoiceBtn" class="voice-btn">
+						<i style="color: grey;" class="fa fa-2x fa-microphone" aria-hidden="true"></i>
+					</button>
+					<button type="button" id="disabledVoiceBtn" class="voice-btn" style="display:none; cursor:not-allowed" disabled>
+						<i style="color: black;" class="fa fa-2x fa-microphone-slash" aria-hidden="true"></i>
+					</button>
+				</span>
           <button id="userInputSubmit" type="submit" class="message-submit">Send</button>
         </form>
       </div>
