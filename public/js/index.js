@@ -1,16 +1,10 @@
-var AWS = require('aws-sdk')
-
-AWS.config.loadFromPath('./config.json');
-
 var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
 var carMake
 
-
-
-AWS.config.region = 'REGION'
-AWS.config.accessKeyId = 'ACCESS_KEY_ID'
-AWS.config.secretAccessKey = 'SECRET_ACCESS_KEY'
+AWS.config.region = window.config.region
+AWS.config.accessKeyId = window.config.accessKeyId
+AWS.config.secretAccessKey = window.config.secretAccessKey
 
 function pollySpeak(params) {
   if (!params['Text']) {
