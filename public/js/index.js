@@ -1,11 +1,16 @@
+var AWS = require('aws-sdk')
+
+AWS.config.loadFromPath('./config.json');
+
 var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
 var carMake
 
 
-AWS.config.region = 'eu-west-1'
-AWS.config.accessKeyId = 'AKIAIWKA4ANUCART52HQ'
-AWS.config.secretAccessKey = '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'
+
+AWS.config.region = 'REGION'
+AWS.config.accessKeyId = 'ACCESS_KEY_ID'
+AWS.config.secretAccessKey = 'SECRET_ACCESS_KEY'
 
 function pollySpeak(params) {
   if (!params['Text']) {
@@ -175,6 +180,85 @@ function displayBotMessage(botMessage, timeout, choices) {
       })
     }
   }
+
+
+$(document).ready(function () {
+  var $userInputField = $('#userInputText')
+  // check that your browser supports the API
+  if (!(('webkitSpeechRecognition' || 'SpeechRecognition' || 'mozSpeechRecognition' || 'msSpeechRecognition') in window)) {
+    console.log('Sorry, your Browser does not support the Speech API')
+    $('#userInputVoice').css('display', 'none')
+  } else {
+    // Create the recognition object and define the event handlers
+    var recognizing = false
+    var finalTranscript = ''
+    var recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)()
+    recognition.interimResults = true // show interim results
+    recognition.lang = 'en-US' // specify the language
+    recognition.maxAlternatives = 5
+
+    recognition.onstart = function () {
+      recognizing = true
+      $userInputField.attr('placeholder', 'Speak slowly and clearly')
+      $('#enabledVoiceBtn').css('display', 'none')
+      $('#disabledVoiceBtn').css('display', 'block')
+      console.log('Speak slowly and clearly')
+    }
+
+    recognition.onend = function () {
+      console.log('speech ended')
+      recognizing = false
+      $('#enabledVoiceBtn').css('display', 'block')
+      $('#disabledVoiceBtn').css('display', 'none')
+    }
+
+    recognition.onresult = function (event) {
+      var interimTranscript = ''
+      // Assemble the transcript from the array of results
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript
+        } else {
+          interimTranscript += event.results[i][0].transcript
+        }
+      }
+      console.log('interim:  ' + interimTranscript)
+      $userInputField.attr('placeholder', interimTranscript)
+      console.log('final:    ' + finalTranscript)
+      // update the page
+      if (finalTranscript.length > 0) {
+        $userInputField.val(finalTranscript)
+        recognition.stop()
+        // $('#start_button').html('Click to Start Again');
+        recognizing = false
+      }
+    }
+
+    recognition.onnomatch = function () {
+      console.log('Speech not recognised')
+      $userInputField.attr('placeholder', 'Sorry couldnt hear try again!')
+    }
+
+    recognition.onerror = function (event) {
+      console.log('There was a recognition error...')
+      $userInputField.attr('placeholder', 'Sorry couldnt hear try again!')
+    }
+
+    $('#userInputVoice').click(function () {
+      if (recognizing) {
+        recognition.stop()
+        // $('#start_button').html('Click to Start Again');
+        recognizing = false
+      } else {
+        finalTranscript = ''
+        // Request access to the User's microphone and Start recognizing voice input
+        $userInputField.val('')
+        recognition.start()
+        // console.log('recog: ' + recognition)
+      }
+    })
+  }
+})
 
   // if the choices exists and has atleast 2 choices
   if (choices !== undefined && choices.length > 1) {

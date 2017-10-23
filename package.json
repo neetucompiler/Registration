@@ -20,6 +20,7 @@
   "dependencies": {
     "compression": "^1.7.1",
     "express": "^4.16.1",
-    "helmet": "^3.8.2"
+    "helmet": "^3.8.2",
+    "aws-sdk": "^2.138.0"
   }
 }
