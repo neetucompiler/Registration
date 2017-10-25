@@ -124,12 +124,10 @@ function enableUserInput(placeholderText) {
 
 function insertUserMessage(msg) {
   if ($.trim(msg) === '') {
-    console.log('The msg parameter was empty or null')
     return false
   }
   var correctElement = msgsContainer.find('.mCSB_container')
   if (!correctElement.length) {
-    console.log('No element found with .mCSB_container')
     return false
   }
   $('<div class="message new message-personal">' + msg + '</div>').appendTo(correctElement)
@@ -229,8 +227,6 @@ $('#minim-chat').click(function () {
   $('#maxi-chat').css('display', 'block')
   // var height = (j(".chat").outerHeight(true) - 46) * -1;
   // j(".chat").css("margin", "0 0 " + height + "px 0");
-  console.log('chat height: ' + '0 0 ' + -($('.chat').outerHeight() - $('.chat-title').outerHeight()) + ' 0')
-  console.log('chat title height: ' + typeof $('.chat-title').outerHeight())
   $('.chat').css('margin', '0 0 ' + -($('.chat').outerHeight() - $('.chat-title').outerHeight()) + 'px 0')
   setTimeoutID = setTimeout(function () {
     $('#animHelpText').css('display', 'block')
@@ -256,7 +252,6 @@ var getJson = $.getJSON('../assets/data_back.json', function (data) {
 
 getJson.error(function (jqxhr, textStatus, error) {
   var err = textStatus + ', ' + error
-  console.log('Request Failed: ' + err)
 })
 
 getJson.success(function () {
@@ -309,7 +304,7 @@ function insertBotMessage(id) {
         break
 
       case 'autocomplete':
-        enableUserInput('Please type!')
+        enableUserInput('Hint: What is / How to')
         displayBotMessage(botDialogs[id].botMessage)
         determineNextResponses(botDialogs[id])
         break
