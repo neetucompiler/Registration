@@ -1,13 +1,13 @@
 var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
-var carMake
-
+var recognizing = false
 
 AWS.config.region = 'eu-west-1'
 AWS.config.accessKeyId = 'AKIAIWKA4ANUCART52HQ'
 AWS.config.secretAccessKey = '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'
 
 function pollySpeak(params) {
+
   if (!params['Text']) {
     console.log('Please provide \'Text\' to make polly speak')
     return
@@ -15,7 +15,7 @@ function pollySpeak(params) {
   params = {
     OutputFormat: params['OutputFormat'] || 'mp3',
     Text: params['Text'],
-    VoiceId: params['VoiceId'] || 'Geraint',
+    VoiceId: params['VoiceId'] || 'Raveena',
     SampleRate: params['SampleRate'] || '22050',
     TextType: params['TextType'] || 'text'
   }
@@ -30,10 +30,11 @@ function pollySpeak(params) {
     var arrayBuffer = uInt8Array.buffer
     var blob = new Blob([arrayBuffer])
     var url = URL.createObjectURL(blob)
-
-    $('#pollyAudio > source').attr('src', url)
-    $('#pollyAudio')[0].load()
-    $('#pollyAudio')[0].play()
+      
+      $('#pollyAudio > source').attr('src', url)
+      $('#pollyAudio')[0].load()
+      $('#pollyAudio')[0].play()
+    
   })
 }
 
@@ -47,6 +48,67 @@ $('#pollySpeak').click(function () {
   $('#pollySpeak').css('display', 'none')
   $('#pollyMute').css('display', 'block')
   mute = true
+})
+
+
+$(document).ready(function () {
+  $userInputField = $('#userInputText')
+  // check that your browser supports the API
+  if (!('webkitSpeechRecognition' in window)) {
+    // alert("Sorry, your Browser does not support the Speech API");
+  } else {
+    // Create the recognition object and define the event handlers
+    var recognition = new webkitSpeechRecognition()
+    recognition.continuous = true // keep processing input until stopped
+    recognition.interimResults = true // show interim results
+    recognition.lang = 'en-GB' // specify the language
+    recognition.onstart = function () {
+      recognizing = true
+      console.log('Speak slowly and clearly')
+      console.log('Click to Stop')
+    }
+    recognition.onerror = function (event) {
+      console.log('There was a recognition error...')
+    }
+    recognition.onend = function () {
+      console.log('iam ended')
+      recognizing = false
+    }
+    recognition.onresult = function (event) {
+      console.log('iam in result')
+      var interimTranscript = ''
+      // Assemble the transcript from the array of results
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript
+        } else {
+          interimTranscript += event.results[i][0].transcript
+        }
+      }
+      console.log('interim:  ' + interimTranscript)
+      console.log('final:    ' + finalTranscript)
+      // update the page
+      if (finalTranscript.length > 0) {
+        jQ('#userInputText').val(finalTranscript)
+        recognition.stop()
+        // $('#start_button').html('Click to Start Again');
+        recognizing = false
+      }
+    }
+    $('#userInputVoice').click(function (e) {
+      e.preventDefault()
+      if (recognizing) {
+        recognition.stop()
+        // $('#start_button').html('Click to Start Again');
+        recognizing = false
+      } else {
+        finalTranscript = ''
+        // Request access to the User's microphone and Start recognizing voice input
+        recognition.start()
+        $('#userInputText').html('&nbsp;')
+      }
+    })
+  }
 })
 
 function getBrowser() {
@@ -383,74 +445,6 @@ function determineNextResponses(botMessage) {
     case 'autocomplete':
       var messageContent = botMessage.botMessage
       userIptVar = botMessage.userInputVar
-
-      if (messageContent.match(/car do you drive/g)) {
-        $('#userInputText').autocomplete({
-          source: function (request, response) {
-            var results = $.ui.autocomplete.filter(Object.keys(Cars), request.term)
-            response(results.slice(0, 10))
-          },
-          multiple: true,
-          maxResults: 10,
-          mustMatch: true,
-          position: {
-            my: 'left bottom-15',
-            at: 'left bottom-15',
-            of: '#userInputText',
-            collision: 'fit'
-          },
-          messages: {
-            noResults: '',
-            results: function () {}
-          }
-        })
-      } else if (messageContent.match(/model/g)) {
-        $('#userInputText').autocomplete({
-          source: function (request, response) {
-            var results = $.ui.autocomplete.filter(Cars[carMake], request.term)
-            response(results.slice(0, 10))
-          },
-          maxResults: 10,
-          multiple: true,
-          mustMatch: true,
-          position: {
-            my: 'left bottom-15',
-            at: 'left bottom-15',
-            of: '#userInputText',
-            collision: 'flip'
-          },
-          messages: {
-            noResults: '',
-            results: function () {}
-          }
-        })
-      } else if (messageContent.match(/question/g)) {
-        $('#userInputText').autocomplete({
-          source: function (request, response) {
-            var results = $.ui.autocomplete.filter(Object.keys(faq), request.term)
-            response(results.slice(0, 10))
-          },
-          maxResults: 10,
-          multiple: true,
-          mustMatch: true,
-          position: {
-            my: 'left bottom-15',
-            at: 'left bottom-15',
-            of: '#userInputText',
-            collision: 'flip'
-          },
-          select: function (event, ui) {
-            if (ui.item.value in faq) {
-              correctAnswer = faq[ui.item.value]
-            }
-          },
-          messages: {
-            noResults: '',
-            results: function () {}
-          }
-        })
-      }
-
       nextResponses[0] = botMessage.nextResponse
       break
 
@@ -498,50 +492,6 @@ function isValidDate(str) {
   return true
 }
 
-function isValidCarRegNo(carRegNo) {
-  if (carRegNo !== undefined && carRegNo !== null && carRegNo !== '' && $.trim(carRegNo) !== '') {
-    var vehicleNo = carRegNo.split('-')
-    if (vehicleNo.length === 4) {
-      if (vehicleNo[0].length === 2 && vehicleNo[1].length === 2 && vehicleNo[2].length === 2 && vehicleNo[3].length === 4 &&
-        isNaN(vehicleNo[0]) && isNaN(vehicleNo[2]) && !isNaN(vehicleNo[1]) && !isNaN(vehicleNo[3])) {
-        return true
-      } else {
-        return false
-      }
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-}
-
-function isValidCar(car) {
-  if (car !== undefined && car !== null && car !== '' && $.trim(car) !== '') {
-    if (Cars.hasOwnProperty(car)) {
-      carMake = car
-      $('#userInputText').autocomplete('destroy')
-      return true
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-}
-
-function isValidCarModel(model) {
-  if (model !== undefined && model !== null && model !== '' && $.trim(model) !== '' && carMake !== undefined && carMake !== null) {
-    if (Cars[carMake].indexOf(model) >= 0) {
-      $('#userInputText').autocomplete('destroy')
-      return true
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-}
 
 function generateRandomName() {
   var randomGender = Math.floor(Math.random() * 2)
@@ -610,11 +560,19 @@ function validate() {
       break
 
     case 'autocomplete':
+    if (correctAnswer == undefined)
+    {
+     insertUserMessage(userInputText)
+     checkDialogFlowResonse(userInputText)
+    }
+    else
+    {
       insertUserMessage(userInputText)
       setTimeout(function () {
         displayBotMessage(correctAnswer)
         correctAnswer = 'Please select your question from the given list.'
       }, 500)
+    }
       break
 
     default:
@@ -623,6 +581,34 @@ function validate() {
   }
   return false
 }
+
+// get DialogFlow(API.AI) response
+var accessToken = 'e064788bb7114ee888b7ce2cb971512a'
+var baseUrl = 'https://api.api.ai/v1/'
+
+function checkDialogFlowResonse(userinputtxt){
+  $.ajax({
+    url: baseUrl + 'query',
+    dataType: 'json',
+    type: 'post',
+    contentType: 'application/json; charset=utf-8',
+    headers: {
+      'Authorization': 'Bearer ' + accessToken
+    },
+    data: JSON.stringify({
+      query: userinputtxt,
+      lang: 'en',
+      sessionId: 'yaydevdiner'
+    }),
+    success: function (data, status) {
+      console.log(data)
+      setTimeout(function () {
+        displayBotMessage(data['result']['speech'])
+      }, 1000)
+    }
+  })
+}
+
 
 var logger = {}
 // store user data in a varible to display
