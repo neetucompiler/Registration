@@ -1,7 +1,7 @@
 var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
 var recognizing = false
-
+var final_lang = "english"
 AWS.config.region = 'eu-west-1'
 AWS.config.accessKeyId = 'AKIAIWKA4ANUCART52HQ'
 AWS.config.secretAccessKey = '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'
@@ -30,11 +30,11 @@ function pollySpeak(params) {
     var arrayBuffer = uInt8Array.buffer
     var blob = new Blob([arrayBuffer])
     var url = URL.createObjectURL(blob)
-      
-      $('#pollyAudio > source').attr('src', url)
-      $('#pollyAudio')[0].load()
-      $('#pollyAudio')[0].play()
-    
+
+    $('#pollyAudio > source').attr('src', url)
+    $('#pollyAudio')[0].load()
+    $('#pollyAudio')[0].play()
+
   })
 }
 
@@ -226,14 +226,45 @@ function displayBotMessage(botMessage, timeout, choices) {
       // }
     }, timeout)
   } else {
-    $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
-    setTimeStamp()
-    playSound('bing')
-    if (!mute) {
-      pollySpeak({
-        Text: botMessage
+    if (final_lang === "Spanish") {
+      console.log("processing spanishlang")
+      $.ajax({
+        url: 'https://api.microsofttranslator.com/V2/Http.svc/Translate',
+        type: 'get',
+        headers: {
+          'Ocp-Apim-Subscription-Key': 'eedf926d4cfd45a0be776186bcfca56c'
+        },
+        data: JSON.stringify({
+          text: 'Hi how are you',
+          to: 'es'
+        }),
+        success: function (data, status) {
+          console.log(data)
+        },
+        error: function (e) {
+          console.log("Error: " + e);
+        }
       })
+      $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+      setTimeStamp()
+      playSound('bing')
+      if (!mute) {
+        pollySpeak({
+          Text: botMessage
+        })
+      }
+    } else {
+      console.log("processing englishlang")
+      $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+      setTimeStamp()
+      playSound('bing')
+      if (!mute) {
+        pollySpeak({
+          Text: botMessage
+        })
+      }
     }
+
   }
 
   // if the choices exists and has atleast 2 choices
@@ -560,19 +591,16 @@ function validate() {
       break
 
     case 'autocomplete':
-    if (correctAnswer == undefined)
-    {
-     insertUserMessage(userInputText)
-     checkDialogFlowResonse(userInputText)
-    }
-    else
-    {
-      insertUserMessage(userInputText)
-      setTimeout(function () {
-        displayBotMessage(correctAnswer)
-        correctAnswer = 'Please select your question from the given list.'
-      }, 500)
-    }
+      if (correctAnswer == undefined) {
+        insertUserMessage(userInputText)
+        checkDialogFlowResonse(userInputText)
+      } else {
+        insertUserMessage(userInputText)
+        setTimeout(function () {
+          displayBotMessage(correctAnswer)
+          correctAnswer = 'Please select your question from the given list.'
+        }, 500)
+      }
       break
 
     default:
@@ -586,7 +614,7 @@ function validate() {
 var accessToken = 'e064788bb7114ee888b7ce2cb971512a'
 var baseUrl = 'https://api.api.ai/v1/'
 
-function checkDialogFlowResonse(userinputtxt){
+function checkDialogFlowResonse(userinputtxt) {
   $.ajax({
     url: baseUrl + 'query',
     dataType: 'json',
@@ -631,4 +659,10 @@ $(document).ready(function () {
       clickDisabled = false
     }, 10000)
   })
+})
+
+$('#language_selector').change(function () {
+  console.log($(this).val())
+  final_lang = $(this).val()
+  console.log(final_lang)
 })
