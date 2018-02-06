@@ -1,118 +1,23 @@
 var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
-var recognizing = false
-var final_lang = "english"
-AWS.config.region = 'eu-west-1'
-AWS.config.accessKeyId = 'AKIAIWKA4ANUCART52HQ'
-AWS.config.secretAccessKey = '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'
-
-function pollySpeak(params) {
-
-  if (!params['Text']) {
-    console.log('Please provide \'Text\' to make polly speak')
-    return
-  }
-  params = {
-    OutputFormat: params['OutputFormat'] || 'mp3',
-    Text: params['Text'],
-    VoiceId: params['VoiceId'] || 'Raveena',
-    SampleRate: params['SampleRate'] || '22050',
-    TextType: params['TextType'] || 'text'
-  }
-
-  var polly = new AWS.Polly({
-    apiVersion: '2016-06-10'
-  })
-
-  polly.synthesizeSpeech(params, function (err, data) {
-    if (err) console.log(err, err.stack) // an error occurred
-    var uInt8Array = new Uint8Array(data.AudioStream)
-    var arrayBuffer = uInt8Array.buffer
-    var blob = new Blob([arrayBuffer])
-    var url = URL.createObjectURL(blob)
-
-    $('#pollyAudio > source').attr('src', url)
-    $('#pollyAudio')[0].load()
-    $('#pollyAudio')[0].play()
-
-  })
-}
-
-var mute = false
-$('#pollyMute').click(function () {
-  $('#pollyMute').css('display', 'none')
-  $('#pollySpeak').css('display', 'block')
-  mute = false
-})
-$('#pollySpeak').click(function () {
-  $('#pollySpeak').css('display', 'none')
-  $('#pollyMute').css('display', 'block')
-  mute = true
-})
+var botMsgCounter = 0
+var socket = io()
 
 
 $(document).ready(function () {
+  var clickDisabled = false
+  insertBotMessage(1)
+  clickDisabled = true
+  setTimeout(function () {
+    clickDisabled = false
+  }, 10000)
   $userInputField = $('#userInputText')
   // check that your browser supports the API
-  if (!('webkitSpeechRecognition' in window)) {
-    // alert("Sorry, your Browser does not support the Speech API");
-  } else {
-    // Create the recognition object and define the event handlers
-    var recognition = new webkitSpeechRecognition()
-    recognition.continuous = true // keep processing input until stopped
-    recognition.interimResults = true // show interim results
-    recognition.lang = 'en-GB' // specify the language
-    recognition.onstart = function () {
-      recognizing = true
-      console.log('Speak slowly and clearly')
-      console.log('Click to Stop')
-    }
-    recognition.onerror = function (event) {
-      console.log('There was a recognition error...')
-    }
-    recognition.onend = function () {
-      console.log('iam ended')
-      recognizing = false
-    }
-    recognition.onresult = function (event) {
-      console.log('iam in result')
-      var interimTranscript = ''
-      // Assemble the transcript from the array of results
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript
-        } else {
-          interimTranscript += event.results[i][0].transcript
-        }
-      }
-      console.log('interim:  ' + interimTranscript)
-      console.log('final:    ' + finalTranscript)
-      // update the page
-      if (finalTranscript.length > 0) {
-        jQ('#userInputText').val(finalTranscript)
-        recognition.stop()
-        // $('#start_button').html('Click to Start Again');
-        recognizing = false
-      }
-    }
-    $('#userInputVoice').click(function (e) {
-      e.preventDefault()
-      if (recognizing) {
-        recognition.stop()
-        // $('#start_button').html('Click to Start Again');
-        recognizing = false
-      } else {
-        finalTranscript = ''
-        // Request access to the User's microphone and Start recognizing voice input
-        recognition.start()
-        $('#userInputText').html('&nbsp;')
-      }
-    })
-  }
 })
 
 function getBrowser() {
   var ua = navigator.userAgent
+  var bl = navigator.language
   var tem
   var M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []
   if (/trident/i.test(M[1])) {
@@ -137,7 +42,8 @@ function getBrowser() {
   }
   return {
     name: M[0],
-    version: M[1]
+    version: M[1],
+    blanguage: bl
   }
 }
 
@@ -170,6 +76,7 @@ function disableUserInput(placeholderText) {
   userInputField.val('') // Remove the text from the user input field
   userInputField.attr('disabled', 'true') // Disable the user input field
   userInputField.attr('placeholder', placeholderText) // Change the placeholder to ask the user to wait
+  $('.message-box').css('font-size', '15px')
   $('.message-box').addClass('disabledCursor')
   $('.message-submit').attr('disabled', 'true')
 }
@@ -201,6 +108,7 @@ function insertUserMessage(msg) {
 }
 
 function displayBotMessage(botMessage, timeout, choices) {
+  console.log("display function called")
   if ($.trim(botMessage) === '') {
     return false
   }
@@ -208,93 +116,215 @@ function displayBotMessage(botMessage, timeout, choices) {
   if (!correctElement.length) {
     return false
   }
-  if (timeout) {
-    setTimeout(function () {
-      setTyping()
-    }, timeout / 2)
-    setTimeout(function () {
-      $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
-      setTimeStamp()
-      $('.message.loading').remove()
-      $('.message.timestamp').remove()
-      updateScrollbar()
-      playSound('bing')
-      // if (!mute) {
-      //   pollySpeak({
-      //     Text: botMessage
-      //   })
-      // }
-    }, timeout)
-  } else {
-    if (final_lang === "Spanish") {
-      console.log("processing spanishlang")
-      $.ajax({
-        url: 'https://api.microsofttranslator.com/V2/Http.svc/Translate',
-        type: 'get',
-        headers: {
-          'Ocp-Apim-Subscription-Key': 'eedf926d4cfd45a0be776186bcfca56c'
-        },
-        data: JSON.stringify({
-          text: 'Hi how are you',
-          to: 'es'
-        }),
-        success: function (data, status) {
-          console.log(data)
-        },
-        error: function (e) {
-          console.log("Error: " + e);
-        }
-      })
-      $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
-      setTimeStamp()
-      playSound('bing')
-      if (!mute) {
-        pollySpeak({
-          Text: botMessage
-        })
-      }
-    } else {
-      console.log("processing englishlang")
-      $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
-      setTimeStamp()
-      playSound('bing')
-      if (!mute) {
-        pollySpeak({
-          Text: botMessage
-        })
-      }
-    }
-
-  }
-
+  setTimeout(function () {
+    setTyping()
+  }, 1000)
+  setTimeout(function () {
+    $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + botMessage + '</div>').appendTo(correctElement)
+    setTimeStamp()
+    $('.message.loading').remove()
+    $('.message.timestamp').remove()
+    updateScrollbar()
+    playSound('bing')
+  },3000)
+  setTimeStamp()
+  playSound('bing')
   // if the choices exists and has atleast 2 choices
   if (choices !== undefined && choices.length > 1) {
+    setTimeout(function () {
+      setTyping()
+    }, 4000)
     var choicesBotMessage = '<div class="chatBtnHolder new">'
     for (var i = 0; i < choices.length; i++) {
-      // choicesBotMessage += '<button class="chatBtn" onclick="choiceClick(\'' + choices[i].replace(/'/g, "\\'") + '\')" value="' + choices[i] + '">' + choices[i] + '</button>';
       choicesBotMessage += '<button class="chatBtn" onclick="choiceClick(\'' + i + '\')" value="' + choices[i] + '">' + choices[i] + '</button>'
     }
     choicesBotMessage += '</div>'
-    if (timeout) {
-      setTimeout(function () {
-        $(choicesBotMessage).appendTo(correctElement)
-        playSound('bing')
-        $('.message.loading').remove()
-        $('.message.timestamp').remove()
-        updateScrollbar()
-      }, timeout)
-    } else {
+    setTimeout(function () {
       $(choicesBotMessage).appendTo(correctElement)
       playSound('bing')
-    }
-    // $('<div class="timestamp">-- Please select your choice --</div>').appendTo('.chatBtnHolder:last');
-    // setTimeStamp('-- Please select your choice --');
+      $('.message.loading').remove()
+      $('.message.timestamp').remove()
+      updateScrollbar()
+    }, 4000)
   }
-
   $('.message.loading').remove()
   $('.message.timestamp').remove()
   updateScrollbar()
 }
+
+socket.on('finalmsg', function (data) {
+  console.log('final value client side' + data.msg)
+
+  if ($.trim(data) === '') {
+    return false
+  }
+  var correctElement = msgsContainer.find('.mCSB_container')
+  if (!correctElement.length) {
+    return false
+  }
+
+  setTimeout(function () {
+    setTyping()
+  }, (3000 || 1) / 2)
+  setTimeout(function () {
+    $('<div class="message new"><figure class="avatar"><img src="../assets/icon.png" /></figure>' + data.msg + '</div>').appendTo(correctElement)
+    setTimeStamp()
+    $('.message.loading').remove()
+    $('.message.timestamp').remove()
+    updateScrollbar()
+    playSound('bing')
+  }, 2000)
+  setTimeStamp()
+  playSound('bing')
+  // if the choices exists and has atleast 2 choices
+  if (data.choices !== undefined && data.choices.length > 1) {
+    var choicesBotMessage = '<div class="chatBtnHolder new">'
+    for (var i = 0; i < data.choices.length; i++) {
+      choicesBotMessage += '<button class="chatBtn" onclick="choiceClick(\'' + i + '\')" value="' + data.choices[i] + '">' + data.choices[i] + '</button>'
+    }
+    choicesBotMessage += '</div>'
+    setTimeout(function () {
+      $(choicesBotMessage).appendTo(correctElement)
+      playSound('bing')
+      $('.message.loading').remove()
+      $('.message.timestamp').remove()
+      updateScrollbar()
+    }, 3000 || 10)
+  }
+})
+socket.on('chat message', function (msg) {
+  console.log('inside chat socket' + msg)
+  botMessage({
+    message: msg,
+    type: 'normal'
+  })
+});
+
+function botMessage(botMsg) {
+  if (!botMsg) return false
+  highChartsContainerID = []
+  $('.message.loading').remove()
+  $('.message.timestamp').remove()
+  var temp = ''
+  var rendered
+  console.log("This is the bot message "+JSON.stringify(botMsg, null, 2));
+  if (botMsg.type === 'feedback') {
+    temp = $('#feedbackTemplate').clone()
+  } else if (botMsg.type === 'normal' || !(botMsg.type)) {
+      console.log("Inside normal message and this is the message found "+JSON.stringify(botMsg, null, 2) +" and also msg is "+botMsg.message);
+      temp = $('#normalMessage').clone().html()
+      Mustache.parse(temp)
+      rendered = Mustache.render(temp, {
+        message: botMsg.message
+      })
+      console.log("\n");
+      console.log("This is the message about to be printed "+JSON.stringify(rendered, null, 2));
+      temp = $(rendered)
+  } else if (botMsg.type === 'video') {
+    temp = $('#videoTemplate').clone().html()
+    Mustache.parse(temp)
+    rendered = Mustache.render(temp, {
+      attr: 'src',
+      attrVal: botMsg.data
+    })
+    temp = $(rendered)
+  } else if (botMsg.type === 'audio') {
+    temp = $('#audioTemplate').clone().html()
+    Mustache.parse(temp)
+    rendered = Mustache.render(temp, {
+      attr: 'src',
+      attrVal: botMsg.data
+    })
+    temp = $(rendered)
+  } else if (botMsg.type === 'herocard') {
+    // console.log(displayCard(botMsg.data))
+    temp = $(displayCard(botMsg.data).wrap('<p/>').parent())
+  } else if (botMsg.type === 'choices') {
+    var chtemp = $('#choicesMessage').clone().html()
+    Mustache.parse(temp)
+    rendered = Mustache.render(chtemp, {
+      message: botMsg.message,
+      choices: faqs(botMsg.data)
+    })
+    temp = $(rendered)
+  } else if (botMsg.type === 'highChart') {
+    temp = $('#highChartTemplate').clone().html()
+    Mustache.parse(temp)
+    var tempID = 'chartContainer' + (chartContainer++)
+    highChartsContainerID.push(tempID)
+    rendered = Mustache.render(temp, {
+      chartContainer: tempID,
+      highChart: function () {
+        return function (text, render) {
+          return render(text)
+        }
+      }
+    })
+    temp = $(rendered)
+  } else if (botMsg.type === 'value') {
+    temp = $('#statMessage').clone().html()
+    console.log(botMsg.comparer.positive)
+    console.log(botMsg.comparer.compareText)
+    console.log(botMsg.comparer.compareValue)
+    console.log('hi')
+    rendered = Mustache.render(temp, {
+      message: botMsg.message,
+      actualValue: botMsg.achieved.actualValue,
+      targetValue: botMsg.achieved.targetValue,
+      positive: botMsg.comparer.positive,
+      compareText: botMsg.comparer.compareText,
+      compareValue: botMsg.comparer.compareValue
+    })
+    temp = $(rendered)
+  }
+
+  function botMsgCounterId() {
+    return 'botMsg' + (botMsgCounter++)
+  }
+
+  function setDate(t) {
+    date = new Date()
+    $(t).find('.message').append($('<div class="timestamp">' + formatAMPM(date) + '</div>'))
+  }
+  setDate(temp)
+  var id = botMsgCounterId()
+  console.log("Printed on line 291");
+  console.log('temp is '+JSON.stringify(temp))
+  $('.mCSB_container').append($(temp.html()).attr('id', id))
+  if (botMsg.type === 'herocard') {
+    // console.log($('#'+id).find('.rslides').html() + '\n\n\n ---------------------------------------------- \n\n\n')
+    $('#' + id).find('.rslides').responsiveSlides({
+      auto: false,
+      nav: true,
+      prevText: '<i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>',
+      nextText: '<i class="fa fa-arrow-right fa-2x" aria-hidden="true"></i>',
+      pager: true
+    })
+  }
+  if (botMsg.type === 'highChart') {
+    chart = renderHighChart(highChartsContainerID.shift(), regionalMonth)
+    chart.setSize(320)
+  }
+  if (botMsg.type === 'herocard') {
+    for (var i = 0; i < botMsg['data']['carousel']['container'].length; i++) {
+      var card = botMsg['data']['carousel']['container'][i]
+      if (card.hasOwnProperty('highChart')) {
+        chart = renderHighChart(highChartsContainerID.shift(), card['highChart'])
+      }
+    }
+  }
+  updateScrollbar()
+  playSound('bing')
+}
+$('#end-chat').click(function () {
+  msgsContainer.find('.chatBtn').attr('disabled', true) 
+  botMessage({
+    message: 'Please provide us a feedback',
+    type: 'feedback'
+  })
+  $('.feedback-bar').hide()
+  disableUserInput('Thank you for using our services')
+})
 
 function updateScrollbar() {
   msgsContainer.mCustomScrollbar('update').mCustomScrollbar('scrollTo', 'bottom', {
@@ -353,6 +383,7 @@ getJson.success(function () {
   var browser = getBrowser()
   userDataLogger('BrowserName', browser.name)
   userDataLogger('BrowserVersion', browser.version)
+  userDataLogger('Browserlanguage', browser.blanguage)
   insertBotMessage(1) // Start the botDialogs
 })
 
@@ -360,22 +391,32 @@ var nextResponses = []
 var choices = []
 var botMsgType
 var userMsgType, userIptVar
-var fnName, correctAnswer
+var fnName, correctAnswer, correctquestion
 var retryPrompt
 
 // recurring function
 function insertBotMessage(id) {
+  console.log("insert called")
+  console.log('id is :'+id)
+  console.log(botDialogsLength)
   if (id > 0 && id <= botDialogsLength) { // check if the id is valid
     botMsgType = botDialogs[id].botMessageType // determine the botMsgType
     userMsgType = getUserMessageType(botDialogs[id]) // determine the userMsgType
     retryPrompt = botDialogs[id].retryPrompt ? getRandom(botDialogs[id].retryPrompt) : 'Please enter the correct input.' // determine the retryPrompt
+    console.log('botmsg type is : '+botMsgType)
     switch (botMsgType) {
       case 'text':
+      console.log('inside text')
         displayBotMessage(getRandom(botDialogs[id].botMessage), 2000)
         determineNextResponses(botDialogs[id])
         enableUserInput('Please type!')
         break
 
+      case 'address':
+        displayBotMessage(getRandom(botDialogs[id].botMessage), 2000)
+        determineNextResponses(botDialogs[id])
+        enableUserInput('Please type!')
+        break
       case 'confirm':
         choices = ['yes', 'no']
         displayBotMessage(getRandom(botDialogs[id].botMessage), 2000, choices)
@@ -391,12 +432,14 @@ function insertBotMessage(id) {
         break
 
       case 'dialog':
+      console.log('inside dialog')
         displayBotMessage(botDialogs[id].botMessage)
         determineNextResponses(botDialogs[id])
         insertBotMessage(nextResponses[0])
         break
 
       case 'autocomplete':
+        console.log('inside autocomplete insert bot message')
         enableUserInput('Hint: What is / How to')
         displayBotMessage(botDialogs[id].botMessage)
         determineNextResponses(botDialogs[id])
@@ -412,10 +455,7 @@ function insertBotMessage(id) {
         console.log('Unknown botMsgType !!')
         break
     }
-    if (botDialogs[id].imageURL) {
-
-    }
-  } else {}
+  }
 }
 
 function getRandom(arrayResp) {
@@ -459,6 +499,11 @@ function determineNextResponses(botMessage) {
       userIptVar = botMessage.userInputVar
       break
 
+    case 'address':
+      nextResponses[0] = botMessage.nextResponse
+      userIptVar = botMessage.userInputVar
+      break
+
     case 'choice':
       for (var i = 0; i < botMessage.choice.length; i++) {
         nextResponses.push(botMessage.choice[i].nextResponse)
@@ -474,9 +519,50 @@ function determineNextResponses(botMessage) {
       break
 
     case 'autocomplete':
+      console.log('determine nxt response autocomplete')
       var messageContent = botMessage.botMessage
       userIptVar = botMessage.userInputVar
-      nextResponses[0] = botMessage.nextResponse
+      // nextResponses[0] = botMessage.nextResponse
+      console.log('value' + messageContent)
+      if (messageContent.match(/Action/g)) {
+        console.log(messageContent)
+        let loadQues
+        loadQues = faq_action
+        console.log(JSON.stringify(faq_action))
+        //disable a div element that started to appear in the DOM as the values were hovered upon
+        $( "#userInputText" ).autocomplete({
+          focus: function (event, ui) {
+                          $(".ui-helper-hidden-accessible").hide();
+                          event.preventDefault();
+                      }
+          });
+        $('#userInputText').autocomplete({
+          source: function (request, response) {
+            var results = $.ui.autocomplete.filter(Object.keys(loadQues), request.term)
+            response(results.slice(0, 10))
+          },
+          maxResults: 10,
+          multiple: true,
+          mustMatch: true,
+          position: {
+            my: 'left bottom-15',
+            at: 'left bottom-15',
+            of: '#userInputText',
+            collision: 'flip'
+          },
+          
+          select: function (event, ui) {
+            if (ui.item.value in loadQues) {
+              // correctAnswer = loadQues[ui.item.value]
+              correctquestion = ui.item.value
+            }
+          },
+          messages: {
+            noResults: '',
+            results: function () {}
+          }
+        })
+      }
       break
 
     case 'year':
@@ -485,7 +571,6 @@ function determineNextResponses(botMessage) {
         changeMonth: true,
         changeYear: true
       })
-
       nextResponses[0] = botMessage.nextResponse
       break
 
@@ -495,6 +580,34 @@ function determineNextResponses(botMessage) {
   }
 }
 
+// Feedback Mechanism
+
+$('body').on('click', '.emoji', function () {
+  $('.emoji').each(function () {
+    $(this).attr('isactive', 'false')
+    $(this).removeClass('jqactive')
+  })
+  $(this).addClass('jqactive')
+  $(this).attr('isactive', 'true')
+})
+
+$('body').on('click', '#send_feedback', function (e) {
+  console.log('inside feedback button click function')
+  if ($('textarea').val().length === 0) {
+    e.preventDefault()
+  } else {
+    console.log('inside the feedbck')
+    insertBotMessage(6)
+    // botMessage({
+    //   message: msg,
+    //   type: 'normal'
+    // })
+    $(this).prop('disabled', true)
+  }
+})
+$('body').on('click', '#userInputSubmit', function (e) {
+  $('ul').hide()
+})
 function choiceClick(selectedChoice) {
   msgsContainer.find('.chatBtn').attr('disabled', true) // disable all the buttons in the messages window
   insertUserMessage(choices[selectedChoice])
@@ -506,6 +619,14 @@ function isValidEmail(email) {
   return re.test(email)
 }
 
+function isValidAddress(str) {
+  if (str !== undefined && str !== null && str !== '' && $.trim(str) !== '') {
+    return !/^[a-z0-9\s,'-]*$/g.test(str)
+  } else {
+    return false
+  }
+}
+
 function isValidString(str) {
   if (str !== undefined && str !== null && str !== '' && $.trim(str) !== '') {
     return !/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(str)
@@ -513,6 +634,7 @@ function isValidString(str) {
     return false
   }
 }
+
 
 function isValidNumber(str) {
   return !isNaN(str)
@@ -522,7 +644,6 @@ function isValidDate(str) {
   $('#userInputText').datepicker('destroy')
   return true
 }
-
 
 function generateRandomName() {
   var randomGender = Math.floor(Math.random() * 2)
@@ -538,10 +659,12 @@ function generateRandomName() {
 }
 
 function validate() {
+  console.log("Submit call")
   var userInputText = userInputField.val()
   switch (userMsgType) {
     case 'text':
       if (isValidString(userInputText)) {
+        console.log('text submit -------------' + userInputText)
         userDataLogger(userIptVar, userInputText)
         insertUserMessage(userInputText)
         insertBotMessage(nextResponses[0])
@@ -551,6 +674,17 @@ function validate() {
       }
       break
 
+    case 'address':
+      if (isValidAddress(userInputText)) {
+        console.log('text submit -------------' + userInputText)
+        userDataLogger(userIptVar, userInputText)
+        insertUserMessage(userInputText)
+        insertBotMessage(nextResponses[0])
+        retryPrompt = ''
+      } else {
+        displayBotMessage(retryPrompt)
+      }
+      break
     case 'number':
       if (isValidNumber(userInputText)) {
         userDataLogger(userIptVar, userInputText)
@@ -565,6 +699,7 @@ function validate() {
     case 'function':
       if (typeof window[fnName] === 'function') {
         if (window[fnName](userInputText)) { // Test if the user defined function validates true for the userInput given.
+          console.log('text submit -------------' + userInputText)
           userDataLogger(userIptVar, userInputText)
           insertUserMessage(userInputText)
           insertBotMessage(nextResponses[0])
@@ -591,13 +726,22 @@ function validate() {
       break
 
     case 'autocomplete':
-      if (correctAnswer == undefined) {
+      if (correctquestion === undefined) {
+        console.log('text submit -------------' + userInputText)
         insertUserMessage(userInputText)
-        checkDialogFlowResonse(userInputText)
+        console.log('have to check for luis responses now')
+        socket.emit('chat message', {
+          msg: userInputText
+        })
+        // checkDialogFlowResonse(userInputText)
       } else {
         insertUserMessage(userInputText)
+        console.log('text submit -------------' + userInputText)
         setTimeout(function () {
-          displayBotMessage(correctAnswer)
+          console.log('question is ' + correctquestion)
+          socket.emit('chat message', {
+            msg: userInputText
+          })
           correctAnswer = 'Please select your question from the given list.'
         }, 500)
       }
@@ -610,9 +754,9 @@ function validate() {
   return false
 }
 
-// get DialogFlow(API.AI) response
-var accessToken = 'e064788bb7114ee888b7ce2cb971512a'
-var baseUrl = 'https://api.api.ai/v1/'
+// // get DialogFlow(API.AI) response
+// var accessToken = 'e064788bb7114ee888b7ce2cb971512a'
+// var baseUrl = 'https://api.api.ai/v1/'
 
 function checkDialogFlowResonse(userinputtxt) {
   $.ajax({
@@ -637,7 +781,6 @@ function checkDialogFlowResonse(userinputtxt) {
   })
 }
 
-
 var logger = {}
 // store user data in a varible to display
 function userDataLogger(inputKey, inputValue) {
@@ -646,23 +789,3 @@ function userDataLogger(inputKey, inputValue) {
 }
 
 $('#generalForm').bind('submit', validate)
-
-$(document).ready(function () {
-  var clickDisabled = false
-  $('.buy-insurance-btn').click(function () {
-    if (clickDisabled) {
-      return
-    }
-    insertBotMessage(4)
-    clickDisabled = true
-    setTimeout(function () {
-      clickDisabled = false
-    }, 10000)
-  })
-})
-
-$('#language_selector').change(function () {
-  console.log($(this).val())
-  final_lang = $(this).val()
-  console.log(final_lang)
-})

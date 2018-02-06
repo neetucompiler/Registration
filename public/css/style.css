@@ -1,5 +1,6 @@
 /*Color Themes*/
 
+
 /*
 dark yellow: rgb(224, 158, 6);
 yellow: rgb(249, 185, 32);
@@ -12,6 +13,10 @@ light red: rgb(246, 9, 29);
 very light red: rgb(248, 58, 74);
 */
 
+#templates {
+  display: none;
+}
+
 *,
 *::before,
 *::after {
@@ -19,8 +24,8 @@ very light red: rgb(248, 58, 74);
 }
 
 div.chatBot {
-  font-family: 'robotoregular';
-  font-size: 12px;
+  font-family: 'inherit';
+  font-size: 13px;
   line-height: 1.3;
   overflow: hidden;
   height: 100%;
@@ -43,10 +48,10 @@ Chat
 .chat {
   position: fixed;
   bottom: 0;
-  margin: 0 0 -355px 0;
+  margin: 0 0 -455px 0;
   right: 30px;
-  width: 300px;
-  height: 400px;
+  width: 350px;
+  height: 500px;
   z-index: 2;
   overflow: hidden;
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
@@ -68,13 +73,12 @@ Chat
   transition: all .4s ease-in-out;
 }
 
-
 #animHelpText {
   position: fixed;
   bottom: 50px;
   right: 30px;
-  color: rgb(123, 4, 14);
-  font-size: 12px;
+  color: rgb(4, 84, 123);
+  font-size: 13px;
   width: 200px;
   -webkit-box-shadow: 0 8px 6px -6px black;
   -moz-box-shadow: 0 8px 6px -6px black;
@@ -91,41 +95,55 @@ Chat
   z-index: 10000;
   border-right: none;
   border-left: 5px solid transparent;
-  border-top: 4px solid rgb(170, 6, 20);
+  border-top: 4px solid rgb(4, 84, 123);
   bottom: -4px;
 }
 
+
 /*--------------------
-Responsiveness
+Feedaback
 --------------------*/
+
+.feedback-bar {
+  background: rgb(55, 14, 98);
+  position: relative;
+  line-height: 20px;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.chatBtn.emoji {
+  width: 17%;
+}
+
+.emoji.jqactive {
+  background-color: rgb(85, 85, 86);
+}
+
 
 /* ----------- iPhone 6+ ----------- */
 
+
 /* Portrait */
-@media only screen 
-and (min-device-width: 414px) 
-and (max-device-width: 736px) 
-and (-webkit-min-device-pixel-ratio: 3)
-and (orientation: portrait) { 
-  .chat{
-		margin: 0 0 -555px 0;
-		right: 0;
-		width: 100%;
-		height: 600px;
-	}
-	#animHelpText {
-		right: 10px;
-	}
+
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: portrait) {
+  .chat {
+    margin: 0 0 -555px 0;
+    right: 0;
+    width: 100%;
+    height: 600px;
+  }
+  #animHelpText {
+    right: 10px;
+  }
 }
+
 
 /* Landscape */
-@media only screen 
-and (min-device-width: 414px) 
-and (max-device-width: 736px) 
-and (-webkit-min-device-pixel-ratio: 3)
-and (orientation: landscape) { 
 
-}
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: landscape) {}
+
 
 /*--------------------
 Chat Title
@@ -138,7 +156,7 @@ Chat Title
   flex: 0 1 45px;
   position: relative;
   z-index: 2;
-  background: rgba(170, 6, 20, 1);
+  background: rgb(0, 94, 157);
   color: #fff;
   text-transform: uppercase;
   text-align: left;
@@ -148,14 +166,14 @@ Chat Title
 .chat-title h1,
 .chat-title h2 {
   font-weight: normal;
-  font-size: 12px;
+  font-size: 13px;
   margin: 0;
   padding: 0;
 }
 
 .chat-title h2 {
   color: rgba(255, 255, 255, 0.5);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 1px;
 }
 
@@ -197,13 +215,12 @@ Chat Title
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-
 .chat-title .pollySpeaker {
   position: absolute;
   z-index: 1;
   top: 10px;
-	right: 50px;
-	width: 30px;
+  right: 50px;
+  width: 30px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: 0px;
@@ -217,13 +234,14 @@ Chat Title
 
 .chat-title .pollySpeaker:active {
   background-color: rgba(255, 255, 255, 0.5);
-} 
+}
 
 span#userInputVoice {
   top: 7px;
   right: 63px;
   position: absolute
 }
+
 
 /*--------------------
 Messages
@@ -234,7 +252,7 @@ Messages
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  color: rgb(123, 4, 14);
+  color: rgb(4, 84, 123);
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -255,7 +273,7 @@ Messages
   border-radius: 10px 10px 10px 0;
   background: rgba(249, 185, 32, 1);
   margin: 8px 0 16px 0;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   margin-left: 35px;
   position: relative;
@@ -269,7 +287,7 @@ Messages
   width: 98%;
   border-radius: 10px;
   background: rgba(249, 185, 32, 1);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   position: relative;
 }
@@ -277,12 +295,13 @@ Messages
 .messages .message .timestamp {
   position: absolute;
   bottom: -17px;
-  font-size: 9px;
+  font-size: 10px;
   color: rgba(255, 255, 255, 0.7);
   left: -1px;
   width: 50px;
   text-align: left;
 }
+
 
 /*.messages .chatBtnHolder .timestamp{
   position: absolute;
@@ -328,7 +347,7 @@ Messages
   right: 5px;
   color: rgba(249, 185, 32, 1);
   text-align: right;
-  background: rgba(170, 6, 20, 1);
+  background: rgb(4, 84, 123);
   border-radius: 10px 10px 0 10px;
 }
 
@@ -337,7 +356,7 @@ Messages
   right: 0;
   border-right: none;
   border-left: 5px solid transparent;
-  border-top: 4px solid rgba(170, 6, 20, 1);
+  border-top: 4px solid rgb(4, 84, 123);
   bottom: -4px;
 }
 
@@ -465,7 +484,7 @@ Message Box
   color: #fff;
   border: none;
   background: #248A52;
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   line-height: 1;
   padding: 6px 10px;
@@ -705,17 +724,17 @@ Bounce Animations
   padding: 5px 10px;
   margin: 1%;
   color: rgb(249, 185, 32);
-  background-color: rgb(123, 4, 14);
+  background-color: rgb(0, 94, 157);
   width: 48%;
   word-wrap: break-word;
 }
 
 .chatBtn:hover {
-  background-color: rgb(170, 6, 20);
+  background-color: rgb(0, 94, 157);
 }
 
 .chatBtn:active {
-  background-color: rgb(246, 9, 29);
+  background-color: rgb(0, 94, 157);
 }
 
 .chatBtn:disabled {
@@ -785,26 +804,26 @@ md-autocomplete-wrap {
   border-radius: 5px;
   border: 2px solid rgb(224, 158, 6);
   overflow: hidden;
-  background: rgb(123, 4, 14);
+  background: rgb(0, 94, 157);
   color: rgb(249, 185, 32);
   padding: 2px 5px;
 }
 
 .buy-insurance-btn:hover {
   border-radius: 5px;
-  border: 2px solid rgb(170, 6, 20);
+  border: 2px solid rgb(0, 94, 157);
   overflow: hidden;
   background: rgb(249, 185, 32);
-  color: rgb(170, 6, 20);
+  color: rgb(0, 94, 157);
   padding: 2px 5px;
 }
 
 .buy-insurance-btn:active {
   border-radius: 5px;
-  border: 2px solid rgb(246, 9, 29);
+  border: 2px solid rgb(0, 94, 157);
   overflow: hidden;
   background: rgb(251, 208, 106);
-  color: rgb(246, 9, 29);
+  color: rgb(0, 94, 157);
   padding: 2px 5px;
 }
 
@@ -816,13 +835,36 @@ md-autocomplete-wrap {
   cursor: not-allowed;
 }
 
-
 .ui-autocomplete.ui-widget {
-  font-family: Verdana,Arial,sans-serif;
+  font-family: inherit;
   font-size: 14px;
+  background-color: rgba(255,255,255,0.85);
+  z-index:2;
+  cursor: pointer;
+  position:fixed;
 }
 
 .ui-autocomplete {
-  position:fixed;
-  width:280px;
+  position: fixed;
+  width: 280px;
+}
+
+.ui-autocomplete:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  
+  /* position: fixed;
+  width: 280px; */
+}
+li:hover{
+  background-color: grey;
+}
+li{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+ul{
+  list-style-type: none;
+  padding: 5px;
+  margin: 2%;
 }
