@@ -10,5 +10,18 @@ var faq_action = {
     "Do I have to add users to the Build Team for all the Supplier Action Plans that I create?":"",
     "Is it possible to delete actions?":""
 }
-var faq_kpi={}
-var faq_general={}
+var faq_kpi={
+    "How do I see, as a BD, the KPI report for all my suppliers?":"",
+    "How many decimals can I enter in the KPI Goal settings fields?":"",
+    "OTD sender and Direct Supply couldn’t show automatically with %and the data for these 2 KPIs is not saved":""
+}
+var faq_general={
+    "The Page is not loading properly (see the screenshot).":"",
+    "I’m a Supply Planner / Production engineer and even if I was added to work on the Action Plan I can’t edit":"",
+    "What is the difference in access between a Business Developer and a Supply Planner?":"",
+    "How should I register the actions with a length of more than one year (2-3 years)?":"",
+    "What is the maximum number of characters in the Action description field?":"",
+    "How does this Check out & Check in work?":"",
+    "What is the Checkpoint status used for?":"",
+    "OTD sender and Direct Supply couldn’t show automatically with %and the data for these 2 KPIs is not saved.":""
+}

@@ -121,14 +121,15 @@ border: none !important;}
         <figure class="avatar">
           <img src="images/logo.jpg" alt="logo">
         </figure>
-        <button class="chat-minmax" id="minim-chat" style="display: none;"><i class="fa fa-minus fa-lg" aria-hidden="true"></i></button>
-        <button class="chat-minmax" id="maxi-chat"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+        <button class="refresh" id="refresh"><i class="fa fa-close fa-th-lg" aria-hidden="false"></i></button>
+        <button class="chat-minmax" id="minim-chat" style="display: none;"><i class="fa fa-angle-double-down fa-lg" aria-hidden="true"></i></button>
+        <button class="chat-minmax" id="maxi-chat"><i class="fa fa-angle-double-up fa-lg" aria-hidden="true"></i></button>
       </div>
       <div class="messages">
         <div class="messages-content"></div>
       </div>
       <div class="buy-insurance" style="font-size: 15px;"><span id="clickinsurance">Click here to</span>
-        <span class="buy-insurance-btn" id="end-chat">End Chat</span>
+        <span class="buy-insurance-btn" id="end-chat">End Chat</span><span class="buy-insurance-btn" id="go-back">Start Again</span>
       </div>
       <form id="generalForm" class="message-box">
         <div id="sound"></div>
@@ -206,19 +207,33 @@ border: none !important;}
       </div>
     </div>
     <div id="normalMessage">
-      <div>
+      <div class="submsg" >
         <div class="message new">
           <figure class="avatar">
             <img src="images/chat-icon.png">
           </figure>
           <!-- <div class="botmessage">{{{message}}} -->
-              <div class="botmessage">{{{message}}}
+              <div class="botmessage" id="alt">{{{message}}}
           </div>
           <!-- <i class="fa fa-thumbs-down" aria-hidden="true" isselected="false"></i>
           <i class="fa fa-thumbs-up" aria-hidden="true" isselected="false"></i> -->
         </div>
       </div>
     </div>
+    <div id="abnormalMessage">
+        <div >
+          <div class="message new submsg" id="msg">
+            <figure class="avatar">
+              <img src="images/chat-icon.png">
+            </figure>
+            <!-- <div class="botmessage">{{{message}}} -->
+                <div class="botmessage" id="alt">{{{message}}}
+                  <br>
+                <button id="next" class="nxt" style="margin-left: 230px; visibility : visible;"><i class="fa fa-angle-down" aria-hidden="false"></i></button>  
+            </div>
+          </div>
+        </div>
+      </div>
     <div id="statMessage">
       <div>
         <div class="message new">

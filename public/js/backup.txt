@@ -2,8 +2,8 @@ var msgsContainer = $('.messages-content')
 var userInputField = $('#userInputText')
 var botMsgCounter = 0
 var socket = io()
-var flag
-var index = 0
+var flag 
+
 $(document).ready(function () {
   var clickDisabled = false
   insertBotMessage(1)
@@ -126,7 +126,7 @@ function displayBotMessage(botMessage, timeout, choices) {
     $('.message.timestamp').remove()
     updateScrollbar()
     playSound('bing')
-  }, 3000)
+  },3000)
   setTimeStamp()
   playSound('bing')
   // if the choices exists and has atleast 2 choices
@@ -193,75 +193,13 @@ socket.on('finalmsg', function (data) {
   }
 })
 socket.on('chat message', function (msg) {
-  console.log('inside chat socket' + JSON.stringify(msg))
-  if(msg.first) {
-    arrlist.length = 0;
-    index = 0;
-    $('.nxt').attr('id', '-1');
-  }
-  if ((msg.last) && (!msg.first)) {
-    botMessage({
-      message: msg.msg,
-      type: 'normal'
-    })
-    // if(flag > 1)
-    toRender(arrlist)
-  } else {
-    botMessage({
-      message: msg,
-      type: 'normal'
-    })
-  }
-
-})
-var clickedNode = []
-
-var counter = 0
-
-function toRender(arrlist) {
-  $("#"+index+':last').click(function () {
-    // alert('clicked');
-    //Setting the id of the last child of the 'NXT' class to index+1
-    $('.nxt:last').attr('id', (index + 1))
-    $('#'+(index+1)).css('visibility', 'visible');
-    if(index == flag-2){
-      $('#'+(index+1)).css('visibility', 'hidden');
-    }
-    temp = $('#abnormalMessage').clone().html()
-    Mustache.parse(temp)
-    rendered = Mustache.render(temp, {
-      message: arrlist[index%flag]
-    })
-    temp = $(rendered)
-    index += 1
-
-    function botMsgCounterId() {
-      return 'botMsg' + (botMsgCounter++)
-    }
-
-    function setDate(t) {
-      date = new Date()
-      $(t).find('.message').append($('<div class="timestamp">' + formatAMPM(date) + '</div>'))
-    }
-    setDate(temp)
-
-    var id = botMsgCounterId()
-    $('.mCSB_container').append($(temp.html()))
-    updateScrollbar()
-    if( index < flag - 1)
-     toRender(arrlist)
-    else {
-      //empty the array after the last response is received, set the index back to zero,
-      //and set the ids of all the previous '.nxt' buttons to -1 (so that they do not conflict with any new buttons that are made).
-      arrlist.length = 0;
-      index = 0;
-      $('.nxt').attr('id', '-1');
-      
-    }
+  console.log('inside chat socket' + msg)
+  botMessage({
+    message: msg,
+    type: 'normal'
   })
-}
+});
 
-var arrlist = []
 function botMessage(botMsg) {
   if (!botMsg) return false
   highChartsContainerID = []
@@ -272,52 +210,57 @@ function botMessage(botMsg) {
   //console.log("This is the bot message "+JSON.stringify(botMsg, null, 2));
   if (botMsg.type === 'feedback') {
     temp = $('#feedbackTemplate').clone()
-
-    function botMsgCounterId() {
-      return 'botMsg' + (botMsgCounter++)
-    }
-  
-    function setDate(t) {
-      date = new Date()
-      $(t).find('.message').append($('<div class="timestamp">' + formatAMPM(date) + '</div>'))
-    }
-    setDate(temp)
-    var id = botMsgCounterId()
-    // console.log("Printed on line 291");
-    // console.log('temp is '+JSON.stringify(temp))
-    $('.mCSB_container').append($(temp.html()).attr('id', id))
-    updateScrollbar()
   } else if (botMsg.type === 'normal' || !(botMsg.type)) {
     flag += 1;
-    console.log('flag count' + flag)
-    // $('.nxt').attr('id',flag)
+    console.log('flag count'+flag)
     //  console.log("Inside normal message and this is the message found "+JSON.stringify(botMsg, null, 2) +" and also msg is "+botMsg.message);
-    if (flag > 1) {
-      arrlist.push(botMsg.message)
+    console.log(temp)
+    if(flag>1){
+      console.log('flag is'+flag)
+      var id = "#"+(flag-1)
+      console.log('id is'+id)
+        console.log('clicked next')
+        $('.submsg').attr('id','m'+flag)
+        $('.nxt').attr('id',flag)
+        // $('#m4').css("visibility","visible")
+        temp = $('#abnormalMessage').clone().html()
+        console.log('-------')
+        console.log(temp)
+        Mustache.parse(temp)
+        rendered = Mustache.render(temp, {
+          message: botMsg.message
+        })
+      //updateScrollbar()
     }
-    else if (flag == 1) {
-      // arrlist.push(botMsg.message)
-      $('.nxt:last').attr('id', index)
-      if(botMsg.message.last) {
-      $('#'+(index)).css('visibility', 'hidden');
-      } else {
-        $('#'+(index)).css('visibility', 'visible');
-      }
+    else if(flag == 1){
+      // var crr = $(mcsb_1).find('.abnormalMessage')
+      $('.submsg').attr('id','m'+flag)
+      $('.nxt').attr('id',flag)
+      // $('#m1').css("visibility","visible")
       temp = $('#abnormalMessage').clone().html()
+      console.log('-------')
+      console.log(temp)
       Mustache.parse(temp)
       rendered = Mustache.render(temp, {
-        message: botMsg.message.msg
+        message: botMsg.message
       })
-      temp = $(rendered)
-
-      setDate(temp)
-      var id = botMsgCounterId()
-      console.log("Printed on line 291");
-      console.log('temp is ' + JSON.stringify(temp))
-      $('.mCSB_container').append($(temp.html()).attr('id', id))
+      // setTimeout(function() {
+      //   updateScrollbar();
+      // }, 1);
+      console.log("Scrollbar updated with flag="+flag)
+      // updateScrollbar();
+    }else{
+      temp = $('#normalMessage').clone().html()
+      Mustache.parse(temp)
+      rendered = Mustache.render(temp, {
+        message: botMsg.message
+      })
       updateScrollbar();
     }
-
+      //console.log("\n");
+      //console.log("This is the message about to be printed "+JSON.stringify(rendered, null, 2));
+      temp = $(rendered)
+      // updateScrollbar()
   } else if (botMsg.type === 'video') {
     temp = $('#videoTemplate').clone().html()
     Mustache.parse(temp)
@@ -383,11 +326,11 @@ function botMessage(botMsg) {
     date = new Date()
     $(t).find('.message').append($('<div class="timestamp">' + formatAMPM(date) + '</div>'))
   }
-  // setDate(temp)
-  // var id = botMsgCounterId()
-  // console.log("Printed on line 291");
-  // console.log('temp is '+JSON.stringify(temp))
-  // $('.mCSB_container').append($(temp.html()).attr('id', id))
+  setDate(temp)
+  var id = botMsgCounterId()
+  console.log("Printed on line 291");
+  console.log('temp is '+JSON.stringify(temp))
+  $('.mCSB_container').append($(temp.html()).attr('id', id))
   if (botMsg.type === 'herocard') {
     // console.log($('#'+id).find('.rslides').html() + '\n\n\n ---------------------------------------------- \n\n\n')
     $('#' + id).find('.rslides').responsiveSlides({
@@ -411,12 +354,10 @@ function botMessage(botMsg) {
     }
   }
   //updateScrollbar()
-
   playSound('bing')
 }
-
 $('#end-chat').click(function () {
-  msgsContainer.find('.chatBtn').attr('disabled', true)
+  msgsContainer.find('.chatBtn').attr('disabled', true) 
   botMessage({
     message: 'Please provide us a feedback',
     type: 'feedback'
@@ -425,7 +366,6 @@ $('#end-chat').click(function () {
   disableUserInput('Thank you for using our services')
 })
 $('#go-back').click(function () {
-  updateScrollbar()
   insertBotMessage(2);
   // msgsContainer.find('.chatBtn').attr('disabled', true) 
   // botMessage({
@@ -508,16 +448,16 @@ var retryPrompt
 // recurring function
 function insertBotMessage(id) {
   console.log("insert called")
-  // console.log('id is :' + id)
-  // console.log(botDialogsLength)
+  console.log('id is :'+id)
+  console.log(botDialogsLength)
   if (id > 0 && id <= botDialogsLength) { // check if the id is valid
     botMsgType = botDialogs[id].botMessageType // determine the botMsgType
     userMsgType = getUserMessageType(botDialogs[id]) // determine the userMsgType
     retryPrompt = botDialogs[id].retryPrompt ? getRandom(botDialogs[id].retryPrompt) : 'Please enter the correct input.' // determine the retryPrompt
-    // console.log('botmsg type is : ' + botMsgType)
+    console.log('botmsg type is : '+botMsgType)
     switch (botMsgType) {
       case 'text':
-        console.log('inside text')
+      console.log('inside text')
         displayBotMessage(getRandom(botDialogs[id].botMessage), 2000)
         determineNextResponses(botDialogs[id])
         enableUserInput('Please type!')
@@ -543,7 +483,7 @@ function insertBotMessage(id) {
         break
 
       case 'dialog':
-        console.log('inside dialog')
+      console.log('inside dialog')
         displayBotMessage(botDialogs[id].botMessage)
         determineNextResponses(botDialogs[id])
         insertBotMessage(nextResponses[0])
@@ -634,42 +574,42 @@ function determineNextResponses(botMessage) {
       var messageContent = botMessage.botMessage
       userIptVar = botMessage.userInputVar
       // nextResponses[0] = botMessage.nextResponse
-      // console.log('value' + messageContent)
+      console.log('value' + messageContent)
       if (messageContent.match(/Action/g)) {
-        // console.log(messageContent)
+        console.log(messageContent)
         let loadQues
         loadQues = faq_action
-        // console.log(JSON.stringify(faq_action))
+        console.log(JSON.stringify(faq_action))
 
-
+        
 
         //disable a div element that started to appear in the DOM as the values were hovered upon
-        $("#userInputText").autocomplete({
+        $( "#userInputText" ).autocomplete({
           focus: function (event, ui) {
-            $(".ui-helper-hidden-accessible").hide();
-            event.preventDefault();
-          }
-        });
+                          $(".ui-helper-hidden-accessible").hide();
+                          event.preventDefault();
+                      }
+          });
         $('#userInputText').autocomplete({
           source: function (request, response) {
             //DETECTING CHANGES IN THE USER INPUT FIELD
-            //   jQuery('#userInputText').on('input', function() {
-            //     console.log("Value changed in autocomplete")
-            //     console.log(document.activeElement)
-            //     // document.activeElement.blur();
-            //     console.log(document.activeElement)
-            //     var list = document.getElementById('ui-id-1');
-            //     // document.getElementsByTagName('body').blur();
-            //     //document.getElementById('ui-id-1').focus();
-            //     console.log(list)
-            //     console.log(document.activeElement)
+          //   jQuery('#userInputText').on('input', function() {
+          //     console.log("Value changed in autocomplete")
+          //     console.log(document.activeElement)
+          //     // document.activeElement.blur();
+          //     console.log(document.activeElement)
+          //     var list = document.getElementById('ui-id-1');
+          //     // document.getElementsByTagName('body').blur();
+          //     //document.getElementById('ui-id-1').focus();
+          //     console.log(list)
+          //     console.log(document.activeElement)
 
-            // });
-            //   var changed = $.ui.autocomplete('change');
+          // });
+          //   var changed = $.ui.autocomplete('change');
             var results = $.ui.autocomplete.filter(Object.keys(loadQues), request.term)
             response(results.slice(0, 10))
           },
-          change: function () {
+          change: function() {
             console.log("Value changed")
           },
           maxResults: 10,
@@ -681,7 +621,7 @@ function determineNextResponses(botMessage) {
             of: '#userInputText',
             collision: 'flip'
           },
-
+          
           select: function (event, ui) {
             if (ui.item.value in loadQues) {
               // correctAnswer = loadQues[ui.item.value]
@@ -690,7 +630,7 @@ function determineNextResponses(botMessage) {
           },
           messages: {
             noResults: '',
-            results: function () { }
+            results: function () {}
           }
         })
         //Setting the autocomplete list as active element
@@ -712,17 +652,17 @@ function determineNextResponses(botMessage) {
         // } else console.log("##################################Browser does not support focus or setactive property##############################");
       }
       if (messageContent.match(/KPI/g)) {
-        // console.log(messageContent)
+        console.log(messageContent)
         let loadQues
         loadQues = faq_kpi
-        // console.log(JSON.stringify(faq_kpi))
+        console.log(JSON.stringify(faq_kpi))
         //disable a div element that started to appear in the DOM as the values were hovered upon
-        $("#userInputText").autocomplete({
+        $( "#userInputText" ).autocomplete({
           focus: function (event, ui) {
-            $(".ui-helper-hidden-accessible").hide();
-            event.preventDefault();
-          }
-        });
+                          $(".ui-helper-hidden-accessible").hide();
+                          event.preventDefault();
+                      }
+          });
         $('#userInputText').autocomplete({
           source: function (request, response) {
             var results = $.ui.autocomplete.filter(Object.keys(loadQues), request.term)
@@ -737,7 +677,7 @@ function determineNextResponses(botMessage) {
             of: '#userInputText',
             collision: 'flip'
           },
-
+          
           select: function (event, ui) {
             if (ui.item.value in loadQues) {
               // correctAnswer = loadQues[ui.item.value]
@@ -746,22 +686,22 @@ function determineNextResponses(botMessage) {
           },
           messages: {
             noResults: '',
-            results: function () { }
+            results: function () {}
           }
         })
       }
       if (messageContent.match(/General/g)) {
-        // console.log(messageContent)
+        console.log(messageContent)
         let loadQues
         loadQues = faq_general
-        // console.log(JSON.stringify(faq_general))
+        console.log(JSON.stringify(faq_general))
         //disable a div element that started to appear in the DOM as the values were hovered upon
-        $("#userInputText").autocomplete({
+        $( "#userInputText" ).autocomplete({
           focus: function (event, ui) {
-            $(".ui-helper-hidden-accessible").hide();
-            event.preventDefault();
-          }
-        });
+                          $(".ui-helper-hidden-accessible").hide();
+                          event.preventDefault();
+                      }
+          });
         $('#userInputText').autocomplete({
           source: function (request, response) {
             var results = $.ui.autocomplete.filter(Object.keys(loadQues), request.term)
@@ -776,7 +716,7 @@ function determineNextResponses(botMessage) {
             of: '#userInputText',
             collision: 'flip'
           },
-
+          
           select: function (event, ui) {
             if (ui.item.value in loadQues) {
               // correctAnswer = loadQues[ui.item.value]
@@ -785,7 +725,7 @@ function determineNextResponses(botMessage) {
           },
           messages: {
             noResults: '',
-            results: function () { }
+            results: function () {}
           }
         })
       }
@@ -1010,11 +950,11 @@ function checkDialogFlowResonse(userinputtxt) {
 }
 
 //Function to refresh the chatbot on cliking the cross button
-$(function () {
-  $("#refresh").on("click", function () {
-    $("body").load("index.html")
-    return false;
-  });
+$(function() {
+  $("#refresh").on("click", function() {
+     $("body").load("index.html")
+     return false;
+ });
 });
 
 var logger = {}
@@ -1027,32 +967,32 @@ function userDataLogger(inputKey, inputValue) {
 // ################## TO HIGHLIGHT THE LIST ITEM AS THEY ARE SELECTED USING THE ARROW KEYS
 var li = $('li');
 var liSelected;
-$(window).keydown(function (e) {
-  if (e.which === 40) {
-    if (liSelected) {
-      liSelected.removeClass('selected');
-      next = liSelected.next();
-      if (next.length > 0) {
-        liSelected = next.addClass('selected');
-      } else {
-        liSelected = li.eq(0).addClass('selected');
-      }
-    } else {
-      liSelected = li.eq(0).addClass('selected');
+$(window).keydown(function(e){
+    if(e.which === 40){
+        if(liSelected){
+            liSelected.removeClass('selected');
+            next = liSelected.next();
+            if(next.length > 0){
+                liSelected = next.addClass('selected');
+            }else{
+                liSelected = li.eq(0).addClass('selected');
+            }
+        }else{
+            liSelected = li.eq(0).addClass('selected');
+        }
+    }else if(e.which === 38){
+        if(liSelected){
+            liSelected.removeClass('selected');
+            next = liSelected.prev();
+            if(next.length > 0){
+                liSelected = next.addClass('selected');
+            }else{
+                liSelected = li.last().addClass('selected');
+            }
+        }else{
+            liSelected = li.last().addClass('selected');
+        }
     }
-  } else if (e.which === 38) {
-    if (liSelected) {
-      liSelected.removeClass('selected');
-      next = liSelected.prev();
-      if (next.length > 0) {
-        liSelected = next.addClass('selected');
-      } else {
-        liSelected = li.last().addClass('selected');
-      }
-    } else {
-      liSelected = li.last().addClass('selected');
-    }
-  }
 });
 
 $('#generalForm').bind('submit', validate)

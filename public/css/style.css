@@ -2,10 +2,10 @@
 
 
 /*
-dark yellow: rgb(224, 158, 6);
-yellow: rgb(249, 185, 32);
-light yellow: rgb(251, 208, 106);
-very light yellow: rgb(251, 223, 157);
+dark white: rgb(224, 158, 6);
+white: white;
+light white: rgb(251, 208, 106);
+very light white: rgb(251, 223, 157);
 
 dark red: rgb(123, 4, 14);
 red: rgb(170, 6, 20);
@@ -24,7 +24,7 @@ very light red: rgb(248, 58, 74);
 }
 
 div.chatBot {
-  font-family: 'inherit';
+  font-family: sans-serif;
   font-size: 13px;
   line-height: 1.3;
   overflow: hidden;
@@ -86,7 +86,7 @@ Chat
   text-align: center;
   border-radius: 30px;
   padding: 10px;
-  background-color: rgb(249, 185, 32);
+  background-color: white;
 }
 
 #animHelpText::before {
@@ -199,7 +199,7 @@ Chat Title
   position: absolute;
   z-index: 1;
   top: 10px;
-  right: 20px;
+  right: 50px;
   background-color: rgba(0, 0, 0, 0.2);
   color: white;
   border: 0px;
@@ -212,6 +212,26 @@ Chat Title
 }
 
 .chat-title .chat-minmax:active {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.chat-title .refresh {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  border: 0px;
+  border-radius: 5px;
+  padding: 5px 7px;
+}
+
+.chat-title refresh:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-title refresh:active {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -271,7 +291,7 @@ Messages
   float: left;
   padding: 6px 10px 7px;
   border-radius: 10px 10px 10px 0;
-  background: rgba(249, 185, 32, 1);
+  background: rgba(255, 255, 255, 1);
   margin: 8px 0 16px 0;
   font-size: 12px;
   line-height: 1.4;
@@ -286,7 +306,7 @@ Messages
   margin: 3% 1%;
   width: 98%;
   border-radius: 10px;
-  background: rgba(249, 185, 32, 1);
+  background: rgba(255, 255, 255, 1);;
   font-size: 12px;
   line-height: 1.4;
   position: relative;
@@ -318,7 +338,7 @@ Messages
   content: '';
   position: absolute;
   bottom: -6px;
-  border-top: 6px solid rgba(249, 185, 32, 1);
+  border-top: 6px solid rgba(255, 255, 255, 1);;
   left: 0;
   border-right: 7px solid transparent;
 }
@@ -345,7 +365,7 @@ Messages
 .messages .message.message-personal {
   float: right;
   right: 5px;
-  color: rgba(249, 185, 32, 1);
+  color: rgba(255, 255, 255, 1);;
   text-align: right;
   background: rgb(4, 84, 123);
   border-radius: 10px 10px 0 10px;
@@ -366,6 +386,7 @@ Messages
 
 .messages .message.new,
 .messages .chatBtnHolder.new {
+  font-family: sans-serif;
   -webkit-transform: scale(0);
   transform: scale(0);
   -webkit-transform-origin: 0 0;
@@ -723,7 +744,7 @@ Bounce Animations
   border-radius: 5px;
   padding: 5px 10px;
   margin: 1%;
-  color: rgb(249, 185, 32);
+  color: white;
   background-color: rgb(0, 94, 157);
   width: 48%;
   word-wrap: break-word;
@@ -801,11 +822,12 @@ md-autocomplete-wrap {
 }
 
 .buy-insurance-btn {
-  border-radius: 5px;
-  border: 2px solid rgb(224, 158, 6);
+  margin : 0px 5px;
+  border-radius: 3px;
+  border: 2px solid rgb(255,255,255);
   overflow: hidden;
   background: rgb(0, 94, 157);
-  color: rgb(249, 185, 32);
+  color: white;
   padding: 2px 5px;
 }
 
@@ -813,7 +835,7 @@ md-autocomplete-wrap {
   border-radius: 5px;
   border: 2px solid rgb(0, 94, 157);
   overflow: hidden;
-  background: rgb(249, 185, 32);
+  background: white;
   color: rgb(0, 94, 157);
   padding: 2px 5px;
 }
@@ -822,7 +844,7 @@ md-autocomplete-wrap {
   border-radius: 5px;
   border: 2px solid rgb(0, 94, 157);
   overflow: hidden;
-  background: rgb(251, 208, 106);
+  background: rgb(255, 255, 255);
   color: rgb(0, 94, 157);
   padding: 2px 5px;
 }
@@ -836,7 +858,7 @@ md-autocomplete-wrap {
 }
 
 .ui-autocomplete.ui-widget {
-  font-family: inherit;
+  font-family: sans-serif;
   font-size: 14px;
   background-color: rgba(255,255,255,0.85);
   z-index:2;
@@ -855,7 +877,7 @@ md-autocomplete-wrap {
   /* position: fixed;
   width: 280px; */
 }
-li:hover{
+ul#ui-id-1 li:hover{
   background-color: grey;
 }
 li{
@@ -867,4 +889,19 @@ ul{
   list-style-type: none;
   padding: 5px;
   margin: 2%;
+  font-family: sans-serif;
 }
+
+ul#ui-id-1 li.selected {
+  background: grey;
+ }
+
+ ::selection {
+   color: rgba(255,255,255,1);
+   background: rgba(0,0,0,1);
+ }
+
+ .buttonIcon {
+   background-image: 
+ }
+ /* li.selected {background:yellow} */
