@@ -220,16 +220,21 @@ controller.hears('.*', ['direct_message', 'message_received', 'direct_mention', 
     if (topIntent == 'Greeting') {
       //global.sockets[message.raw_message.sender].emit('chat message', "You have reached the greeting intent, you said "+session.message.text);
       global.sockets[message.raw_message.sender].emit('chat message', {msg:"Well, hello there!", first:true, last:true});
+    }else  if (topIntent == 'thanks') {
+      //global.sockets[message.raw_message.sender].emit('chat message', "You have reached the greeting intent, you said "+session.message.text);
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:"It was nice talking to you :)",feedback:true, first:true, last:true});
+    } else  if (topIntent == 'general') {
+      //global.sockets[message.raw_message.sender].emit('chat message', "You have reached the greeting intent, you said "+session.message.text);
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:"Yeah", first:true, last:true});
     } else if (topIntent == 'pageNotLoading') {
       global.sockets[message.raw_message.sender].emit('chat message', {msg:"Please follow these steps to recover PWA from not loading properly:<br><li>Go to Tools Menu in IE > Internet Options > Security > Trusted Sites > sites</li>", first:true});
       global.sockets[message.raw_message.sender].emit('chat message', '<a href="guide_images/1_scrn.png" target="_blank"><img src="guide_images/1_scrn.png" width="225" height="200"></a>');
-      global.sockets[message.raw_message.sender].emit('chat message', '<li>In the pop up type the below URL’s and add them one by one:<br>a.<u><a style="color: blue" href="https://iweof.sharepoint.com/sites/pwa-purpo/" target="_blank">https://iweof.sharepoint.com/sites/pwa-purpo/</a></u><br>b.<u><a style="color: blue" href="https://iweof-myfiles.sharepoint.com/" target="_blank">https://iweof-myfiles.sharepoint.com/</a></u><br>c.<u><a style="color: blue" href="https://iweof.sharepoint.com/" target="_blank">https://iweof.sharepoint.com/</a></u><br>d.<u><a style="color: blue" href="https://iweof-files.sharepoint.com/"  target="_blank">https://iweof-files.sharepoint.com/</a></u><br></li><li>Close the pop-ups</li><li>Now go to Tools >Internet Options > advanced tab.</li><li>Click on restore advanced settings.</li>');
+      global.sockets[message.raw_message.sender].emit('chat message', '<li>In the pop up type the below URL’s and add them one by one:<br>a.<u><a style="color: white" href="https://iweof.sharepoint.com/sites/pwa-purpo/" target="_blank">https://iweof.sharepoint.com/sites/pwa-purpo/</a></u><br>b.<u><a style="color: white" href="https://iweof-myfiles.sharepoint.com/" target="_blank">https://iweof-myfiles.sharepoint.com/</a></u><br>c.<u><a style="color: white" href="https://iweof.sharepoint.com/" target="_blank">https://iweof.sharepoint.com/</a></u><br>d.<u><a style="color: white" href="https://iweof-files.sharepoint.com/"  target="_blank">https://iweof-files.sharepoint.com/</a></u><br></li><li>Close the pop-ups</li><li>Now go to Tools >Internet Options > advanced tab.</li><li>Click on restore advanced settings.</li>');
       global.sockets[message.raw_message.sender].emit('chat message', "Try accessing PWA and check if the page loads as expected. If not make sure the trusted sites are added properly.");
       global.sockets[message.raw_message.sender].emit('chat message', "If problem persists click on Tools > Internet Options > advanced tab > Reset.");
       global.sockets[message.raw_message.sender].emit('chat message', {msg:'<a href="guide_images/1.1_scrn.png" target="_blank"><img src="guide_images/1.1_scrn.png" width="225" height="200"></a>', last: true});
     } else if (topIntent == 'cantEditActionPlan') {
-      global.sockets[message.raw_message.sender].emit('chat message', {msg:"This might resolve your issue.", first:true});
-      global.sockets[message.raw_message.sender].emit('chat message', 'The reason was that one step was missed from the process. After Building the Team and saving, the information needs to be Published (from the Action page).');
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'The reason was that one step was missed from the process. After Building the Team and saving, the information needs to be Published (from the Action page).', first:true});
       global.sockets[message.raw_message.sender].emit('chat message',"<br><li>The Build Team option can be found on the top menu / Project no matter on what page you are (Supplier Info, KPI Goal Setting, Actions, SWOT or Risk page). You can also land on the Build Team page by Ctrl+Shift+B.</li><br><li>Select the users from the left side and Add them to the right (to the project/APL).</li><br><li>Once you have selected and added the users click on Save & Close button on the top menu / Project tab.</li><br><li>Then go to Actions / Task tab on the top menu and click Publish.</li>");
       global.sockets[message.raw_message.sender].emit('chat message', '<a href="guide_images/2_src.png" target="_blank"><img src="guide_images/2_src.png" width="225" height="200"></a>');
       global.sockets[message.raw_message.sender].emit('chat message', {msg:"If the BD/BDM has done all these steps and still you (Supply Planner / Production Engineer) can’t edit the Actions, then contact your APL facilitator to check your access rights in the tool.", last:true});
@@ -283,7 +288,7 @@ controller.hears('.*', ['direct_message', 'message_received', 'direct_mention', 
       global.sockets[message.raw_message.sender].emit('chat message', {msg:'<a href="guide_images/18_scrn.png" target="_blank"><img src="guide_images/18_scrn.png" width="225" height="200"></a>', last:true});
     } else if (topIntent == 'None') {
       //global.sockets[message.raw_message.sender].emit('chat message', "You have reached the greeting intent, you said "+session.message.text);
-      global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: blue" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: white" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
 
     } else if (topIntent == 'Help') {
       //global.sockets[message.raw_message.sender].emit('chat message', "You have reached the greeting intent, you said "+session.message.text);
@@ -291,10 +296,10 @@ controller.hears('.*', ['direct_message', 'message_received', 'direct_mention', 
       global.sockets[message.raw_message.sender].emit('chat message', {msg:"You can ask stuff like \"What is the difference between a supply manager and a business developer?\"; or<br>\"How can I delete actions?\";or<br>\"What is the maximum number of characters in the action descriptioon field?\"; or anything else.", last:true});
 
     } else {
-      global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: blue" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: white" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
     }
   } else {
-    global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: blue" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
+    global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: white" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
   }
 
 });

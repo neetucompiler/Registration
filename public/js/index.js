@@ -13,6 +13,13 @@ $(document).ready(function () {
   }, 10000)
   $userInputField = $('#userInputText')
   // check that your browser supports the API
+
+  $('#userInputText').keypress(function(e){
+    if(e.which == 13){
+        $('#generalForm').submit();
+        return false; //prevent duplicate submission
+    }
+});
 })
 
 function getBrowser() {
@@ -206,11 +213,18 @@ socket.on('chat message', function (msg) {
     })
     // if(flag > 1)
     toRender(arrlist)
+    
   } else {
     botMessage({
       message: msg,
       type: 'normal'
     })
+    if(msg.feedback){
+      botMessage({
+        message: 'Please provide us a feedback',
+        type: 'feedback'
+      })
+    }
   }
 
 })
@@ -644,13 +658,14 @@ function determineNextResponses(botMessage) {
 
 
         //disable a div element that started to appear in the DOM as the values were hovered upon
-        $("#userInputText").autocomplete({
+        var input = document.getElementById("userInputText");
+        $(input).autocomplete({
           focus: function (event, ui) {
             $(".ui-helper-hidden-accessible").hide();
             event.preventDefault();
           }
         });
-        $('#userInputText').autocomplete({
+        $(input).autocomplete({
           source: function (request, response) {
             //DETECTING CHANGES IN THE USER INPUT FIELD
             //   jQuery('#userInputText').on('input', function() {
@@ -819,9 +834,6 @@ $('body').on('click', '.emoji', function () {
 
 $('body').on('click', '#send_feedback', function (e) {
   console.log('inside feedback button click function')
-  if ($('textarea').val().length === 0) {
-    e.preventDefault()
-  } else {
     console.log('inside the feedbck')
     insertBotMessage(6)
     // botMessage({
@@ -829,11 +841,16 @@ $('body').on('click', '#send_feedback', function (e) {
     //   type: 'normal'
     // })
     $(this).prop('disabled', true)
-  }
 })
 $('body').on('click', '#userInputSubmit', function (e) {
   $('ul').hide()
 })
+$('#userInputText').keypress(function(e){
+  if(e.which == 13){
+      $('#genaralForm').submit();
+      return false; //prevent duplicate submission
+  }
+});
 function choiceClick(selectedChoice) {
   msgsContainer.find('.chatBtn').attr('disabled', true) // disable all the buttons in the messages window
   insertUserMessage(choices[selectedChoice])
@@ -886,14 +903,21 @@ function generateRandomName() {
 
 function validate() {
   console.log("Submit call")
-  var userInputText = userInputField.val()
+  var userInputText = document.getElementById("userInputText").value;
+  
+  console.log("This is the value that we are getting second. "+document.getElementById("userInputText").value)
+  
   switch (userMsgType) {
     case 'text':
       if (isValidString(userInputText)) {
         console.log('text submit -------------' + userInputText)
         userDataLogger(userIptVar, userInputText)
         insertUserMessage(userInputText)
-        insertBotMessage(nextResponses[0])
+        // insertBotMessage(nextResponses[0])
+    botMessage({
+      message: userInputText,
+      type: 'normal'
+    })
         retryPrompt = ''
       } else {
         displayBotMessage(retryPrompt)

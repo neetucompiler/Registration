@@ -121,6 +121,10 @@ Feedaback
   background-color: rgb(85, 85, 86);
 }
 
+.emoji.jqactive:hover {
+  background-color: rgb(85, 85, 86);
+}
+
 
 /* ----------- iPhone 6+ ----------- */
 
@@ -262,6 +266,11 @@ span#userInputVoice {
   position: absolute
 }
 
+input.break {
+  word-wrap: break-word;
+  word-break: break-all;
+  height: 80px;
+}
 
 /*--------------------
 Messages
@@ -279,6 +288,7 @@ Messages
 }
 
 .messages .messages-content {
+  background-color: rgba(255,255,255,0.7);
   position: absolute;
   top: 0;
   left: 0;
@@ -291,7 +301,7 @@ Messages
   float: left;
   padding: 6px 10px 7px;
   border-radius: 10px 10px 10px 0;
-  background: rgba(255, 255, 255, 1);
+  background: rgba(0, 0, 0, 1);
   margin: 8px 0 16px 0;
   font-size: 12px;
   line-height: 1.4;
@@ -306,7 +316,8 @@ Messages
   margin: 3% 1%;
   width: 98%;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 1);;
+  background: rgba(0, 0, 0, 1);
+  color:rgba(255, 255, 255)
   font-size: 12px;
   line-height: 1.4;
   position: relative;
@@ -338,7 +349,7 @@ Messages
   content: '';
   position: absolute;
   bottom: -6px;
-  border-top: 6px solid rgba(255, 255, 255, 1);;
+  border-top: 6px solid rgba(0, 0, 0, 1);
   left: 0;
   border-right: 7px solid transparent;
 }
@@ -393,6 +404,7 @@ Messages
   transform-origin: 0 0;
   -webkit-animation: bounce 500ms linear both;
   animation: bounce 500ms linear both;
+  color: white
 }
 
 .messages .message.loading::before {
@@ -538,13 +550,13 @@ Custom Srollbar
   opacity: 0;
 }
 
-.mCSB_inside>.mCSB_container {
+.mCSB_inside>.mCSB_container { 
   margin-right: 0px;
   padding: 0 10px;
 }
 
 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(255,255,255,0.7) !important;
 }
 
 
