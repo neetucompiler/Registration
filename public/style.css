@@ -86,7 +86,7 @@ Chat
   text-align: center;
   border-radius: 30px;
   padding: 10px;
-  background-color: #cccccc9c;
+  background-color: white;
 }
 
 #animHelpText::before {
@@ -173,7 +173,6 @@ Chat Title
   font-size: 13px;
   margin: 0;
   padding: 0;
-  padding-top: 6px;
 }
 
 .chat-title h2 {
@@ -195,7 +194,7 @@ Chat Title
 }
 
 .chat-title .avatar img {
-  width: 55%;
+  width: 100%;
   height: auto;
   border-radius: 5px;
 }
@@ -282,7 +281,7 @@ Messages
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  color: #036d03;
+  color: #2fb26a;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -317,7 +316,7 @@ Messages
   margin: 3% 1%;
   width: 98%;
   border-radius: 10px;
-  background: #036d03;
+  background: #2fb26a;
   color:rgba(255, 255, 255)
   font-size: 12px;
   line-height: 1.4;
@@ -758,17 +757,17 @@ Bounce Animations
   padding: 5px 10px;
   margin: 1%;
   color: white;
-  background-color: #04547b;
+  background-color: #036d03;
   width: 48%;
   word-wrap: break-word;
 }
 
 .chatBtn:hover {
-  background-color: #04547b;
+  background-color: #036d03;
 }
 
 .chatBtn:active {
-  background-color: #04547b;
+  background-color: #036d03;
 }
 
 .chatBtn:disabled {
@@ -839,26 +838,26 @@ md-autocomplete-wrap {
   border-radius: 3px;
   border: 2px solid rgb(255,255,255);
   overflow: hidden;
-  background: #04547b;
+  background: #036d03;
   color: white;
   padding: 2px 5px;
 }
 
 .buy-insurance-btn:hover {
   border-radius: 5px;
-  border: 2px solid #04547b;
+  border: 2px solid #2fb26a;
   overflow: hidden;
   background: white;
-  color: #04547b;
+  color: #2fb26a;
   padding: 2px 5px;
 }
 
 .buy-insurance-btn:active {
   border-radius: 5px;
-  border: 2px solid #04547b;
+  border: 2px solid #036d03;
   overflow: hidden;
   background: rgb(255, 255, 255);
-  color: #04547b;
+  color: #036d03;
   padding: 2px 5px;
 }
 

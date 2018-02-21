@@ -1,54 +1,61 @@
 [{
-		"id": 1,
-		"botMessage": "Hi.. Welcome to TN Registration Department",
-		"botMessageType": "dialog",
-		"nextResponse": 2,
-		"retryPrompt": "Please select correct option"
+	"id": 1,
+	"botMessage": "Hi.. Welcome to TN Registration Department",
+	"botMessageType": "dialog",
+	"nextResponse": 2,
+	"retryPrompt": "Please select correct option"
+}, {
+	"id": 2,
+	"botMessage": ["Please select the option below - know how to register"],
+	"botMessageType": "choice",
+	"choice": [{
+		"option": "Documents",
+		"nextResponse": 3
 	}, {
-		"id": 2,
-		"botMessage": ["Please select the option below - know how to register"],
-		"botMessageType": "choice",
-		"choice": [{
-			"option": "Documents",
-			"nextResponse": 3
-		}, {
-			"option": "Birth & Death",
-			"nextResponse": 4
-		}, {
-			"option": "Marriage",
-			"nextResponse": 5
-		}, {
-			"option": "Chits",
-			"nextResponse": 51
-		}],
-		"userMessageType": "number",
-		"retryPrompt": "Please select correct option"
-	},{
-		"id": 3,
-		"botMessage": "Please select your question for Action plan category",
-		"botMessageType": "autocomplete",
-		"userMessageType": "autocomplete",
-		"nextResponse": 7,
-		"retryPrompt": "Please select correct option"
-	},{
-		"id": 4,
-		"botMessage": "Please select your question for KPI category",
-		"botMessageType": "autocomplete",
-		"userMessageType": "autocomplete",
-		"nextResponse": 7,
-		"retryPrompt": "Please select correct option"
-	},{
-		"id": 5,
-		"botMessage": "Please select your question for General category",
-		"botMessageType": "autocomplete",
-		"userMessageType": "autocomplete",
-		"nextResponse": 7,
-		"retryPrompt": "Please select correct option"
-	},{
-		"id": 6,
-		"botMessage": "Thanks a lot, it was nice talking to you",
-		"botMessageType": "dialog",
-		"nextResponse": 7,
-		"retryPrompt": "Please select correct option"
-	}
+		"option": "Birth & Death",
+		"nextResponse": 4
+	}, {
+		"option": "Marriage",
+		"nextResponse": 5
+	}, {
+		"option": "Chits",
+		"nextResponse": 6
+	}],
+	"userMessageType": "number",
+	"retryPrompt": "Please select correct option"
+},{
+	"id": 3,
+	"botMessage": "Please select your question for Document Registration",
+	"botMessageType": "autocomplete",
+	"userMessageType": "autocomplete",
+	"nextResponse": 8,
+	"retryPrompt": "Please select correct option"
+},{
+	"id": 4,
+	"botMessage": "Please select your question for Birth & Death Registration",
+	"botMessageType": "autocomplete",
+	"userMessageType": "autocomplete",
+	"nextResponse": 8,
+	"retryPrompt": "Please select correct option"
+},{
+	"id": 5,
+	"botMessage": "Please select your question for Marriage Registration",
+	"botMessageType": "autocomplete",
+	"userMessageType": "autocomplete",
+	"nextResponse": 8,
+	"retryPrompt": "Please select correct option"
+},{
+	"id": 6,
+	"botMessage": "Please select your question for Chits",
+	"botMessageType": "autocomplete",
+	"userMessageType": "autocomplete",
+	"nextResponse": 8,
+	"retryPrompt": "Please select correct option"
+},{
+	"id": 7,
+	"botMessage": "Thanks a lot, it was nice talking to you",
+	"botMessageType": "dialog",
+	"nextResponse": 8,
+	"retryPrompt": "Please select correct option"
+}
 ]

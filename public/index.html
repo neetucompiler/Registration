@@ -52,9 +52,9 @@ border: none !important;}
     <div class="chat" id="chatbox">
       <div class="chat-title">
         <h1 style="margin-left: 23px;">TN Registration Dept</h1>
-        <!-- <figure class="avatar"> -->
-          <!-- <img src="images/logo.png" alt="logo"> -->
-        <!-- </figure> -->
+        <figure class="avatar">
+          <img src="images/logo.jpg" alt="logo" style="border-radius:50%">
+        </figure>
         <button class="refresh" id="refresh"><i class="fa fa-close fa-th-lg" aria-hidden="false"></i></button>
         <button class="chat-minmax" id="minim-chat" style="display: none;"><i class="fa fa-angle-double-down fa-lg" aria-hidden="true"></i></button>
         <button class="chat-minmax" id="maxi-chat"><i class="fa fa-angle-double-up fa-lg" aria-hidden="true"></i></button>
@@ -63,11 +63,11 @@ border: none !important;}
         <div class="messages-content"></div>
       </div>
       <div class="buy-insurance" style="font-size: 15px;"><span id="clickinsurance">Click here to</span>
-        <span class="buy-insurance-btn" id="end-chat">Download Forms</span>
+        <span class="buy-insurance-btn" id="end-chat">End Chat</span>
       </div>
       <form id="generalForm" class="message-box">
         <div id="sound"></div>
-        <textarea id="userInputText" type="text" class="message-input" placeholder="Type message..."></textarea>
+        <textarea id="userInputText" type="text" class="message-input" placeholder="Type message..." ></textarea>
         <button id="userInputSubmit" type="submit" class="message-submit">Send</button>
       </form>
     </div>
@@ -88,7 +88,7 @@ border: none !important;}
           <tr>
             <td> Enter your comments: </td>
             <td>
-              <textarea id="comment" name="comments" placeholder="Please enter your comments here"></textarea>
+              <textarea id="comment" name="comments" placeholder="Please enter your comments here" style="color:black"></textarea>
             </td>
           </tr>
         </table>

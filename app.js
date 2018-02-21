@@ -295,7 +295,17 @@ controller.hears('.*', ['direct_message', 'message_received', 'direct_mention', 
       global.sockets[message.raw_message.sender].emit('chat message', {msg:"I am Ikea bot and I can help clear your doubts on any topic related to the dunctions in the company. Please feel free to ask anything that you like.", first:true});
       global.sockets[message.raw_message.sender].emit('chat message', {msg:"You can ask stuff like \"What is the difference between a supply manager and a business developer?\"; or<br>\"How can I delete actions?\";or<br>\"What is the maximum number of characters in the action descriptioon field?\"; or anything else.", last:true});
 
-    } else {
+    } else if (topIntent == 'subscriber_rights') {
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'RIGHTS OF THE SUBSCRIBERS : ', first:true});
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'<ul><li>You have the right to demand the following from the Foreman.</li><li>Registrars’ prior sanction for the conduct of chit.</li><li>Copy of bylaw registered.</li><li>Participation in the auction and bid details.</li><li>Receipt of prize amount within 7 days of bid after furnishing the surety required.</li><li>Receipt of dividend after payment of subscription periodically.</li></ul>', last:true});
+    } else if (topIntent == 'marriage_proofs') {
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'The proofs required are  marriage proof, residence proof, proof of age, witnesses', first:true, last:true});
+    } else if (topIntent == 'marriage_fees') {
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'Just for registration it is 100.For brief structure you can visit <u><a style="color: white" href="https://tnreginet.gov.in/portal/webHP?requestType=ApplicationRH&actionVal=homePage&screenId=114&UserLocaleID=en&_csrf=d712ac9e-4f0c-4973-a2e1-5f338c57e413" target="_blank">this link</a></u>', first:true, last:true});
+    } else if (topIntent == 'birth_death_registration') {
+      global.sockets[message.raw_message.sender].emit('chat message', {msg:'The birth and death registration is done by the local bodies concerned.', first:true, last:true});
+    } 
+    else {
       global.sockets[message.raw_message.sender].emit('chat message', {msg:'Sorry, I do not understand. Please contact our support team at <u><a style="color: white" href="http://www.ikea.com/gb/en/customer-service/contact-us/" target="_blank">Ikea Support</a></u>.', first:true, last:true});
     }
   } else {

@@ -529,7 +529,9 @@ function insertBotMessage(id) {
     userMsgType = getUserMessageType(botDialogs[id]) // determine the userMsgType
     retryPrompt = botDialogs[id].retryPrompt ? getRandom(botDialogs[id].retryPrompt) : 'Please enter the correct input.' // determine the retryPrompt
     // console.log('botmsg type is : ' + botMsgType)
+    console.log("This is the type of botmessage "+botMsgType)
     switch (botMsgType) {
+      
       case 'text':
         console.log('inside text')
         displayBotMessage(getRandom(botDialogs[id].botMessage), 2000)
@@ -551,7 +553,7 @@ function insertBotMessage(id) {
 
       case 'choice':
         returnChoices(botDialogs[id].choice)
-        displayBotMessage(getRandom(botDialogs[id].botMessage), undefined, choices)
+        displayBotMessage((botDialogs[id].botMessage), undefined, choices)
         determineNextResponses(botDialogs[id])
         disableUserInput('Please select your Choice above')
         break
@@ -633,6 +635,7 @@ function determineNextResponses(botMessage) {
       for (var i = 0; i < botMessage.choice.length; i++) {
         nextResponses.push(botMessage.choice[i].nextResponse)
       }
+      console.log("Next responses "+nextResponses)
       break
 
     case 'confirm':
@@ -646,90 +649,14 @@ function determineNextResponses(botMessage) {
     case 'autocomplete':
       console.log('determine nxt response autocomplete')
       var messageContent = botMessage.botMessage
+      console.log("this is the message "+messageContent)
       userIptVar = botMessage.userInputVar
-      // nextResponses[0] = botMessage.nextResponse
-      // console.log('value' + messageContent)
-      if (messageContent.match(/Action/g)) {
+      console.log("msg content"+messageContent)
+      if (messageContent.match(/Chits/g)) {
         // console.log(messageContent)
+        console.log('inside chits')
         let loadQues
-        loadQues = faq_action
-        // console.log(JSON.stringify(faq_action))
-
-
-
-        //disable a div element that started to appear in the DOM as the values were hovered upon
-        var input = document.getElementById("userInputText");
-        $(input).autocomplete({
-          focus: function (event, ui) {
-            $(".ui-helper-hidden-accessible").hide();
-            event.preventDefault();
-          }
-        });
-        $(input).autocomplete({
-          source: function (request, response) {
-            //DETECTING CHANGES IN THE USER INPUT FIELD
-            //   jQuery('#userInputText').on('input', function() {
-            //     console.log("Value changed in autocomplete")
-            //     console.log(document.activeElement)
-            //     // document.activeElement.blur();
-            //     console.log(document.activeElement)
-            //     var list = document.getElementById('ui-id-1');
-            //     // document.getElementsByTagName('body').blur();
-            //     //document.getElementById('ui-id-1').focus();
-            //     console.log(list)
-            //     console.log(document.activeElement)
-
-            // });
-            //   var changed = $.ui.autocomplete('change');
-            var results = $.ui.autocomplete.filter(Object.keys(loadQues), request.term)
-            response(results.slice(0, 10))
-          },
-          change: function () {
-            console.log("Value changed")
-          },
-          maxResults: 10,
-          multiple: true,
-          mustMatch: true,
-          position: {
-            my: 'left bottom-15',
-            at: 'left bottom-15',
-            of: '#userInputText',
-            collision: 'flip'
-          },
-
-          select: function (event, ui) {
-            if (ui.item.value in loadQues) {
-              // correctAnswer = loadQues[ui.item.value]
-              correctquestion = ui.item.value
-            }
-          },
-          messages: {
-            noResults: '',
-            results: function () { }
-          }
-        })
-        //Setting the autocomplete list as active element
-        // console.log(document.activeElement)
-        // document.activeElement.blur();
-        // console.log(document.activeElement)
-        // var list = document.getElementById('ui-id-1');
-        // // document.getElementsByTagName('body').blur();
-        // document.getElementById('ui-id-1').focus();
-        // console.log(list)
-        // console.log(document.activeElement)
-        // if(list.setActive) {
-        //   list.setActive();
-        //   console.log("##################################Set as active##############################");
-        // } else if(list.focus) {
-        //     list.focus();
-        //     console.log("##################################Set as Focus##############################");
-        //     console.log(document.activeElement)
-        // } else console.log("##################################Browser does not support focus or setactive property##############################");
-      }
-      if (messageContent.match(/KPI/g)) {
-        // console.log(messageContent)
-        let loadQues
-        loadQues = faq_kpi
+        loadQues = faq_chit
         // console.log(JSON.stringify(faq_kpi))
         //disable a div element that started to appear in the DOM as the values were hovered upon
         $("#userInputText").autocomplete({
@@ -765,10 +692,49 @@ function determineNextResponses(botMessage) {
           }
         })
       }
-      if (messageContent.match(/General/g)) {
+      if (messageContent.match(/Birth/g)) {
         // console.log(messageContent)
         let loadQues
-        loadQues = faq_general
+        loadQues = faq_birth
+        // console.log(JSON.stringify(faq_kpi))
+        //disable a div element that started to appear in the DOM as the values were hovered upon
+        $("#userInputText").autocomplete({
+          focus: function (event, ui) {
+            $(".ui-helper-hidden-accessible").hide();
+            event.preventDefault();
+          }
+        });
+        $('#userInputText').autocomplete({
+          source: function (request, response) {
+            var results = $.ui.autocomplete.filter(Object.keys(loadQues), request.term)
+            response(results.slice(0, 10))
+          },
+          maxResults: 10,
+          multiple: true,
+          mustMatch: true,
+          position: {
+            my: 'left bottom-15',
+            at: 'left bottom-15',
+            of: '#userInputText',
+            collision: 'flip'
+          },
+
+          select: function (event, ui) {
+            if (ui.item.value in loadQues) {
+              // correctAnswer = loadQues[ui.item.value]
+              correctquestion = ui.item.value
+            }
+          },
+          messages: {
+            noResults: '',
+            results: function () { }
+          }
+        })
+      }
+      if (messageContent.match(/Marriage/g)) {
+        // console.log(messageContent)
+        let loadQues
+        loadQues = faq_mrg
         // console.log(JSON.stringify(faq_general))
         //disable a div element that started to appear in the DOM as the values were hovered upon
         $("#userInputText").autocomplete({
@@ -853,6 +819,7 @@ $('#userInputText').keypress(function(e){
 });
 function choiceClick(selectedChoice) {
   msgsContainer.find('.chatBtn').attr('disabled', true) // disable all the buttons in the messages window
+  console.log("selected choice"+selectedChoice)
   insertUserMessage(choices[selectedChoice])
   insertBotMessage(nextResponses[selectedChoice])
 }
