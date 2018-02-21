@@ -4,7 +4,8 @@ global.sockets = [];
 
 
 /////////////////////////////////////////////// CONSOLE BOT /////////////////////////////////////////////////////////
-var Botkit = require(__dirname + '/node_modules/botkit/lib/CoreBot.js')
+var path = require('path');
+var Botkit = require(path.resolve(__dirname, 'node_modules/botkit/lib/CoreBot.js'));
 var readline = require('readline')
 
 
