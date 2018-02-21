@@ -4,7 +4,7 @@ global.sockets = [];
 
 
 /////////////////////////////////////////////// CONSOLE BOT /////////////////////////////////////////////////////////
-var Botkit = require(__dirname + '/node_modules/botkit/lib/CoreBot.js')
+var Botkit = require(__dirname + '/lib/CoreBot.js')
 var readline = require('readline')
 
 
@@ -104,13 +104,6 @@ function TextBot(configuration) {
           timestamp: Date.now(),
           sender: socket.id
         }
-
-
-
-
-
-
-
         console.log("THIS IS THE MESSAGE THAT IS BEING FORMED" + JSON.stringify(message, null, 2)) //WRITTEN BY AKASH
         text_botkit.ingest(bot, message, null)
 
@@ -127,9 +120,6 @@ function TextBot(configuration) {
     //     };
 
     //Added by akash
-
-
-
     //});
   };
   return text_botkit;

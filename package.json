@@ -18,6 +18,7 @@
   "author": "ATU",
   "license": "MIT",
   "dependencies": {
+    "botkit-middleware-luis": "^1.0.0",
     "compression": "^1.7.1",
     "express": "^4.16.1",
     "express-session": "^1.15.6",
