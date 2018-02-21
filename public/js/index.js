@@ -286,7 +286,6 @@ function botMessage(botMsg) {
   //console.log("This is the bot message "+JSON.stringify(botMsg, null, 2));
   if (botMsg.type === 'feedback') {
     temp = $('#feedbackTemplate').clone()
-
     function botMsgCounterId() {
       return 'botMsg' + (botMsgCounter++)
     }
@@ -801,7 +800,7 @@ $('body').on('click', '.emoji', function () {
 $('body').on('click', '#send_feedback', function (e) {
   console.log('inside feedback button click function')
     console.log('inside the feedbck')
-    insertBotMessage(6)
+    insertBotMessage(7)
     // botMessage({
     //   message: msg,
     //   type: 'normal'
