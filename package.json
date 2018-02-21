@@ -23,6 +23,7 @@
     "express": "^4.16.1",
     "express-session": "^1.15.6",
     "helmet": "^3.9.0",
+    "jfs": "^0.3.0",
     "mustache": "^2.3.0"
   }
 }
