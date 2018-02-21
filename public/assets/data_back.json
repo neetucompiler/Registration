@@ -1,22 +1,25 @@
 [{
 		"id": 1,
-		"botMessage": "Hi.. Welcome to Ikea",
+		"botMessage": "Hi.. Welcome to TN Registration Department",
 		"botMessageType": "dialog",
 		"nextResponse": 2,
 		"retryPrompt": "Please select correct option"
 	}, {
 		"id": 2,
-		"botMessage": ["Please select categories below to ask query on?"],
+		"botMessage": ["Please select the option below - know how to register"],
 		"botMessageType": "choice",
 		"choice": [{
-			"option": "Action Plan",
+			"option": "Documents",
 			"nextResponse": 3
 		}, {
-			"option": "KPI",
+			"option": "Birth & Death",
 			"nextResponse": 4
 		}, {
-			"option": "General",
+			"option": "Marriage",
 			"nextResponse": 5
+		}, {
+			"option": "Chits",
+			"nextResponse": 51
 		}],
 		"userMessageType": "number",
 		"retryPrompt": "Please select correct option"
